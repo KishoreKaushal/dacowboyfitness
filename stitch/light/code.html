@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DaCowboy Fitness | First Principles Only</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Source+Sans+3:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Custom Font Assignments based on Style Guidance */
+        .font-display-lg { font-family: 'EB Garamond', serif; }
+        .font-headline-md { font-family: 'EB Garamond', serif; }
+        .font-body-md { font-family: 'Source Sans 3', sans-serif; }
+        .font-label-sm { font-family: 'JetBrains Mono', monospace; }
+        
+        body {
+            background-color: #FAF9F7;
+            color: #1A1A1A;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(26, 26, 26, 0.08);
+            backdrop-filter: blur(12px);
+            transition: transform 0.2s ease, border-color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(26, 26, 26, 0.2);
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-active:active {
+            transform: scale(0.98);
+        }
+
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            opacity: 0.03;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        .editorial-rule {
+            height: 1px;
+            background-color: rgba(26, 26, 26, 0.1);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                "surface-container": "#F2F1EE",
+                "on-surface": "#1A1A1A",
+                "on-surface-variant": "#4A4A4A",
+                "surface": "#FAF9F7",
+                "primary": "#1A1A1A",
+                "background": "#FAF9F7",
+                "surface-container-lowest": "#FFFFFF",
+                "on-background": "#1A1A1A",
+              },
+              "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+              },
+              "spacing": {
+                "margin-desktop": "64px",
+                "container-max": "1200px",
+                "unit": "4px",
+                "gutter": "24px",
+                "margin-mobile": "20px"
+              },
+              "fontFamily": {
+                "display-lg": ["EB Garamond"],
+                "label-sm": ["JetBrains Mono"],
+                "headline-md": ["EB Garamond"],
+                "body-md": ["Source Sans 3", "sans-serif"]
+              }
+            }
+          }
+        }
+    </script>
+</head>
+<body class="font-body-md text-body-md selection:bg-black selection:text-white">
+<div class="noise-overlay"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-background/90 backdrop-blur-md border-b border-black/5">
+<nav class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 max-w-container-max mx-auto">
+<div class="flex items-center gap-4 font-display-lg text-2xl md:text-3xl tracking-tighter text-primary">
+<svg class="h-8 w-auto text-primary" fill="currentColor" viewbox="0 0 862.18 656.12" xmlns="http://www.w3.org/2000/svg">
+<path d="M252.35,213.79c8.93-54.64,19.8-108.65,32.29-162.13,9.2-40.73,37.75-41.06,65.03-46.48,60.17-7.19,125.08-6.99,185,3.72,21.74,3.93,41.2,10.05,47.31,41,11.23,48.54,22.48,96.81,31.49,146.14.12,1,.51,1.75,1.18,2.23,20.66-.65,41.33-.84,62.02-.58,60.78,2.31,124.17,7.22,183.82,23.13.65.06,1.11.45,1.4,1.17-3.13,3.31-6.38,6.46-9.74,9.42-106.74,89.92-235.45,110.35-358.3,72.61-42.79-13.33-84.2-32.85-125.98-50.59-37.3-16.31-75.35-28.73-114.16-37.25-.99-.3-1.44-1.09-1.36-2.41h0ZM.28,291.3c.4-2.63,16.55-12.76,19.23-14.29,39.22-21.16,82-34.02,124.16-40.11,88.92-13.26,171.8,35.17,247.09,90.83,37.76,28.24,74.61,59.41,116.95,75.06,25.16,9.48,48.87,12.06,74.87,13.35.78.73.96,1.7.55,2.88-31.76,86.08-79.12,167.31-133.34,231.74-7.78,7.8-17.44,6.64-23.68-3.32-35.55-52.08-70.67-104.28-107.83-154.5-29.07-39.42-48.37-84.47-55.36-138.66.23-2,1.14-2.76,2.73-2.31,33.82,1.65,66.97,8.15,99.98,17.58,4.94,1.75,10.87,3.28,15.49,5.9,1.01.38,2.79-.05,1.1-1.48-6.84-5.47-13.7-10.89-20.58-16.28-34.43-26.04-77.97-32.02-116.97-36.21-80.85-6.11-165.93-.99-244.39-30.18h0Z"></path>
+</svg>
+<span class="">DaCowboy Fitness</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#">Philosophy</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#">Courses</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#">Journal</a>
+<a class="text-primary border-b border-primary pb-1 font-body-md text-body-md" href="#">The Cowboy Way</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300 font-body-md text-body-md" href="#about">About</a>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-300 ml-4" title="Toggle Theme">
+<span class="material-symbols-outlined !font-light">light_mode</span>
+</button>
+</div>
+<button class="md:hidden text-primary">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+</header>
+<main class="pt-24 overflow-hidden">
+<!-- Hero Section -->
+<section class="relative min-h-[90vh] flex flex-col items-center justify-center text-center px-margin-mobile md:px-margin-desktop py-32 max-w-container-max mx-auto">
+<div class="max-w-4xl space-y-12">
+<blockquote class="font-display-lg text-4xl md:text-6xl italic leading-tight text-primary/90">
+                "The society that separates its scholars from its warriors will have its thinking done by cowards and its fighting done by fools."
+            </blockquote>
+<p class="font-label-sm text-on-surface-variant text-sm tracking-[0.2em] uppercase">— Thucydides</p>
+<div class="space-y-8 pt-8">
+<p class="text-on-surface-variant text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+                    Challenge conventional fitness through first principles. Understand your body before trying to change it.
+                </p>
+<div class="flex flex-col md:flex-row gap-6 justify-center pt-4">
+<button class="bg-primary text-background px-10 py-4 font-label-sm text-label-sm uppercase tracking-widest btn-active">
+                        Explore Courses
+                    </button>
+<button class="border border-black/15 text-primary px-10 py-4 font-label-sm text-label-sm uppercase tracking-widest hover:bg-black/5 transition-colors btn-active">
+                        BOOK 1:1 CALL
+                    </button>
+</div>
+</div>
+</div>
+<div class="absolute bottom-12 animate-bounce opacity-30 text-primary">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</section>
+<!-- The Cowboy Way (Horse Analogy) -->
+<section class="px-margin-mobile md:px-margin-desktop py-32 max-w-container-max mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<div class="lg:col-span-7 space-y-8">
+<h2 class="font-headline-md text-5xl md:text-7xl text-primary tracking-tighter">The Cowboy Way</h2>
+<div class="w-24 editorial-rule"></div>
+<div class="font-body-md text-lg md:text-xl text-on-surface-variant leading-loose space-y-6">
+<p class="">
+                        Consider the horse. A rider who seeks only to command without understanding the animal's skeletal geometry, its nervous state, and its metabolic limits will eventually find themselves on the ground.
+                    </p>
+<p class="">
+                        Traditional fitness treats the body like a machine to be forced into submission through raw exertion. We believe in the cowboy's wisdom: true mastery begins with silent observation. We peel back the noise of modern "exercise" to rediscover the physics of biology.
+                    </p>
+</div>
+</div>
+<div class="lg:col-span-5 relative aspect-square group">
+<div class="absolute inset-0 bg-primary/5 rounded-full blur-3xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+<div class="w-full h-full bg-cover bg-center glass-card relative z-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAxpjoCvj2veGRkF3SMn355RkVX3RQlZyGX7P11STMyZa1gB9JtFMee99UFw6L4Tp8WD2-MdZL13RfPnGjsezbrWUr42fstWIpGuVUC-JusC-hBqEjZS_WMp9AKCgLxuongxnZj4W8dbeU1LufyV3-ckOB3dDKxT_1NeOLURbUlVoD8olXsP0_NEqqTFogI8LDsgOB2MlvbI5b-gYQJb7VFP_tjbzQzNxha8FcanGmMSEhHL2LPppglMX4rKHli6pbPQ3xGwL8IElc");'></div>
+<div class="absolute -bottom-8 -right-8 glass-card p-8 hidden md:block z-20">
+<p class="font-label-sm text-xs text-primary/40 uppercase tracking-widest">Principles I</p>
+<p class="font-display-lg text-2xl">Observation precedes Action.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Foundational Knowledge -->
+<section class="px-margin-mobile md:px-margin-desktop py-32 max-w-container-max mx-auto">
+<div class="flex justify-between items-end mb-16">
+<div>
+<h2 class="font-headline-md text-4xl md:text-5xl text-primary">Foundational Knowledge</h2>
+<p class="text-on-surface-variant font-label-sm mt-4 uppercase tracking-widest">Master the Biology</p>
+</div>
+<div class="hidden md:block">
+<span class="font-label-sm text-xs opacity-40 uppercase tracking-widest">Scroll to discover</span>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Course 1 -->
+<div class="glass-card p-1 flex flex-col h-full group cursor-pointer">
+<div class="aspect-[4/5] bg-cover bg-center w-full grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDACa1M4FviHvhTdwZuGnaGH9PmncgG9fWITKS_EL0wB-85LCjQ1-NkTISJFrhA0uCl8kPzK4JdYTYlwIvRGJIVFgZ_CWShNodAcHPTCWY_LlVHNEHuJ7g1TWAq5UKji1QBi6pQQaQd-3dO3zsR88aUPZ3ddkLpPuuiDYS0jxIvqJJjZWm5V1fEJLqEaECDWHwKRsfZuf5c8uWDnc5eLFMIASvgl1UBlkIpQqy-PFSCisVXAdJt_zYBNI5lSfFKTIs3o26pvJUK22k");'></div>
+<div class="p-8 space-y-4">
+<h3 class="font-display-lg text-2xl text-primary">Human Biology Foundations</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Understanding the fundamental constraints of our evolutionary hardware.</p>
+<div class="pt-4 flex items-center gap-2 group-hover:gap-4 transition-all">
+<span class="font-label-sm text-xs tracking-widest uppercase">Begin Study</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Course 2 -->
+<div class="glass-card p-1 flex flex-col h-full group cursor-pointer">
+<div class="aspect-[4/5] bg-cover bg-center w-full grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChSubvxJrqVWUgSsiqvEOvezt8nlTF8TO8fWbsK-X84lCNdUzWrhBEHm6lCs9dBzaY1nUkpUy6wHLoebeOMB9VOOwp1_WBoylJfE9slBXxyeE0YRG6bmfRA33TekERsjh1wHf3Tg8TF5Ijfe94TQPY1pdA7L5PEcr-sn0Nv77QH8qFl5_RzPln6DXPe9bOSwGhIBZnU9M8aTmuptgg6TDBakYCBhp9XzCkfhIGSpkkdDHIreMjNgAUdtalTeMn05CpJ8CaQEZHt2I");'></div>
+<div class="p-8 space-y-4">
+<h3 class="font-display-lg text-2xl text-primary">Metabolic Flexibility</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">The art of shifting energy substrates efficiently and naturally.</p>
+<div class="pt-4 flex items-center gap-2 group-hover:gap-4 transition-all">
+<span class="font-label-sm text-xs tracking-widest uppercase">Begin Study</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Course 3 -->
+<div class="glass-card p-1 flex flex-col h-full group cursor-pointer">
+<div class="aspect-[4/5] bg-cover bg-center w-full grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBOlHSPSKmZnnU_34VK5LG8ky206XyuVqE80J-rASZ55nMTmN2ibVOIHeFKetv1biX5fPMQIyVCUi_9Z9bmOqQnWPKmNRopwEgBOD9awACbRZhBIRF02vxJj2BxUXvamW-cmJ22LmDHFHwjD40XKkmNODg64xR_fG2kWfN051AIVx7KdlGYBo2CQoKaZ4MefSIohufAqpo3-RGJ1HSXHYM1iDy5w-Y22f5qbUSz1mp__tHhSCkYuC3Jj7DqrVNXMXcIbZwDvtnC2GU");'></div>
+<div class="p-8 space-y-4">
+<h3 class="font-display-lg text-2xl text-primary">Movement Before Muscle</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Relearning the native patterns of the human kinetic chain.</p>
+<div class="pt-4 flex items-center gap-2 group-hover:gap-4 transition-all">
+<span class="font-label-sm text-xs tracking-widest uppercase">Begin Study</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Course 4 -->
+<div class="glass-card p-1 flex flex-col h-full group cursor-pointer">
+<div class="aspect-[4/5] bg-cover bg-center w-full grayscale opacity-80 group-hover:opacity-100 group-hover:grayscale-0 transition-all duration-700" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCdssuPako78EV9OekDM_OHxl8C-vt3ThHn2sDJCltjrjwrjgYX5Ey21MHWy7UpI99rj0RBLUbTEmRfP1fu_utT1xT5yNDgq7M_3JVHKpCbLWbnZkhBJ-aAyZdG2iGImYeNq1mqRbJMZa1d5kSrQLwU4kUXrbeKwNUUfQDO0mNUJMmOWQMPxxQ6BXhHPIQYiLIA4Cu00vypL-mSY9yvAjMomQxESz1usxMmhQkGxNvRfXdfJs5As-ODlcC5JicX51FTfpfs16RHtVA");'></div>
+<div class="p-8 space-y-4">
+<h3 class="font-display-lg text-2xl text-primary">Understanding Strength</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">Deconstructing force production through a physical lens.</p>
+<div class="pt-4 flex items-center gap-2 group-hover:gap-4 transition-all">
+<span class="font-label-sm text-xs tracking-widest uppercase">Begin Study</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Journal Section -->
+<section class="bg-surface-container-lowest py-32 border-y border-black/5">
+<div class="px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="max-w-2xl mb-24">
+<h2 class="font-headline-md text-5xl text-primary mb-6">The Journal</h2>
+<p class="text-on-surface-variant text-lg">Occasional essays on the divergence of modern living and ancient biology.</p>
+</div>
+<div class="space-y-12">
+<article class="group cursor-pointer">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center py-12 border-b border-black/5 group-hover:border-black/20 transition-colors">
+<div class="space-y-2 max-w-2xl">
+<span class="font-label-sm text-xs text-primary/40 uppercase tracking-[0.3em]">Issue 001</span>
+<h3 class="font-display-lg text-3xl md:text-4xl text-primary group-hover:italic transition-all duration-500">Why Indoor Gyms Became the Default</h3>
+</div>
+<div class="mt-6 md:mt-0">
+<span class="font-label-sm text-xs border border-black/10 px-4 py-2 group-hover:bg-primary group-hover:text-background transition-colors">READ ESSAY</span>
+</div>
+</div>
+</article>
+<article class="group cursor-pointer">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center py-12 border-b border-black/5 group-hover:border-black/20 transition-colors">
+<div class="space-y-2 max-w-2xl">
+<span class="font-label-sm text-xs text-primary/40 uppercase tracking-[0.3em]">Issue 002</span>
+<h3 class="font-display-lg text-3xl md:text-4xl text-primary group-hover:italic transition-all duration-500">The Illusion of Slow Metabolism</h3>
+</div>
+<div class="mt-6 md:mt-0">
+<span class="font-label-sm text-xs border border-black/10 px-4 py-2 group-hover:bg-primary group-hover:text-background transition-colors">READ ESSAY</span>
+</div>
+</div>
+</article>
+<article class="group cursor-pointer">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center py-12 border-b border-black/5 group-hover:border-black/20 transition-colors">
+<div class="space-y-2 max-w-2xl">
+<span class="font-label-sm text-xs text-primary/40 uppercase tracking-[0.3em]">Issue 003</span>
+<h3 class="font-display-lg text-3xl md:text-4xl text-primary group-hover:italic transition-all duration-500">Why We Forgot How Humans Move</h3>
+</div>
+<div class="mt-6 md:mt-0">
+<span class="font-label-sm text-xs border border-black/10 px-4 py-2 group-hover:bg-primary group-hover:text-background transition-colors">READ ESSAY</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- About Section -->
+<section class="px-margin-mobile md:px-margin-desktop py-32 max-w-container-max mx-auto border-t border-black/5" id="about">
+<div class="max-w-4xl space-y-12">
+<h2 class="font-headline-md text-5xl md:text-7xl text-primary tracking-tighter">About</h2>
+<div class="w-24 editorial-rule"></div>
+<div class="font-body-md text-lg md:text-xl text-on-surface-variant leading-loose space-y-6">
+<p class="">I'm Kaushal Kishore.</p>
+<p class="">DaCowboy Fitness is where I share the way I think about the human body.</p>
+<p class="">Everything here is built on first principles, biology, and analogies—not trends, dogma, or borrowed opinions.</p>
+<p class="">I don't believe people need another list of exercises or another meal plan.</p>
+<p class="">I believe they need a better mental model of the body they live in.</p>
+<p class="">That's what these courses are designed to build.</p>
+</div>
+<div class="pt-12">
+<p class="font-label-sm text-xs text-primary/40 uppercase tracking-[0.3em]">"Teach a person how to think, not what to think."</p>
+</div>
+</div>
+</section>
+<!-- Let's Talk Section -->
+<section class="py-48 text-center px-margin-mobile">
+<div class="max-w-2xl mx-auto space-y-12">
+<h2 class="font-display-lg text-5xl md:text-7xl leading-tight text-primary">Let's Talk</h2>
+<div class="space-y-6 text-on-surface-variant text-lg md:text-xl leading-relaxed">
+<p class="">Your presence should speak about your skill before you ever have to.</p>
+<p class="">Most people who book a call with me have already spent time with my content. They understand how I think, what I believe, and what I'm trying to build before we ever speak.</p>
+<p class="">If you're completely new here, I recommend exploring the courses or spending some time with my Instagram content first. The conversation is far more valuable when we already speak the same language.</p>
+</div>
+<div class="flex justify-center">
+<button class="bg-primary text-background px-12 py-5 font-label-sm text-label-sm uppercase tracking-widest btn-active">
+                    BOOK 1:1 CALL
+                </button>
+</div>
+<div class="flex justify-center gap-8 mt-8">
+<a class="text-primary/40 hover:text-primary transition-colors duration-300" href="https://www.instagram.com/da.cowboy.fitness" target="_blank">
+<span class="material-symbols-outlined !font-extralight">photo_camera</span>
+</a>
+<a class="text-primary/40 hover:text-primary transition-colors duration-300" href="mailto:dacowboyclub@gmail.com">
+<span class="material-symbols-outlined !font-extralight">mail</span>
+</a>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest w-full py-12 border-t border-black/5">
+<div class="flex flex-col md:flex-row justify-between items-center px-margin-mobile md:px-margin-desktop gap-gutter max-w-container-max mx-auto">
+<div class="flex items-center gap-4 font-display-lg text-2xl md:text-3xl text-primary">
+<svg class="h-8 w-auto text-primary" fill="currentColor" viewbox="0 0 862.18 656.12" xmlns="http://www.w3.org/2000/svg">
+<path d="M252.35,213.79c8.93-54.64,19.8-108.65,32.29-162.13,9.2-40.73,37.75-41.06,65.03-46.48,60.17-7.19,125.08-6.99,185,3.72,21.74,3.93,41.2,10.05,47.31,41,11.23,48.54,22.48,96.81,31.49,146.14.12,1,.51,1.75,1.18,2.23,20.66-.65,41.33-.84,62.02-.58,60.78,2.31,124.17,7.22,183.82,23.13.65.06,1.11.45,1.4,1.17-3.13,3.31-6.38,6.46-9.74,9.42-106.74,89.92-235.45,110.35-358.3,72.61-42.79-13.33-84.2-32.85-125.98-50.59-37.3-16.31-75.35-28.73-114.16-37.25-.99-.3-1.44-1.09-1.36-2.41h0ZM.28,291.3c.4-2.63,16.55-12.76,19.23-14.29,39.22-21.16,82-34.02,124.16-40.11,88.92-13.26,171.8,35.17,247.09,90.83,37.76,28.24,74.61,59.41,116.95,75.06,25.16,9.48,48.87,12.06,74.87,13.35.78.73.96,1.7.55,2.88-31.76,86.08-79.12,167.31-133.34,231.74-7.78,7.8-17.44,6.64-23.68-3.32-35.55-52.08-70.67-104.28-107.83-154.5-29.07-39.42-48.37-84.47-55.36-138.66.23-2,1.14-2.76,2.73-2.31,33.82,1.65,66.97,8.15,99.98,17.58,4.94,1.75,10.87,3.28,15.49,5.9,1.01.38,2.79-.05,1.1-1.48-6.84-5.47-13.7-10.89-20.58-16.28-34.43-26.04-77.97-32.02-116.97-36.21-80.85-6.11-165.93-.99-244.39-30.18h0Z"></path>
+</svg>
+<span class="">DaCowboy Fitness</span>
+</div>
+<div class="flex flex-col items-center md:items-end gap-4">
+<div class="flex gap-6 mb-2">
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="mailto:dacowboyclub@gmail.com" title="Email">
+<span class="material-symbols-outlined !font-extralight text-lg">mail</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors duration-300" href="https://www.instagram.com/da.cowboy.fitness" target="_blank" title="Instagram">
+<span class="material-symbols-outlined !font-extralight text-lg">photo_camera</span>
+</a>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-50">
+                © 2026 DaCowboy Fitness. First Principles Only.
+            </p>
+</div>
+</div>
+</footer>
+<script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            if (targetId === '#') return;
+            const target = document.querySelector(targetId);
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Parallax effect for background images
+    window.addEventListener('scroll', () => {
+        const scroll = window.pageYOffset;
+        const images = document.querySelectorAll('.bg-cover');
+        images.forEach(img => {
+            const speed = 0.05;
+            img.style.backgroundPositionY = (scroll * speed) + 'px';
+        });
+    });
+</script>
+</body></html>
