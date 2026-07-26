@@ -4,6 +4,7 @@ export const siteConfig = {
   email: 'dacowboyclub@gmail.com',
   instagram: 'https://www.instagram.com/da.cowboy.fitness',
   instagramHandle: '@da.cowboy.fitness',
+  bookingUrl: 'https://topmate.io/da_cowboy/2187494',
   copyright: '© 2026 DaCowboy Fitness. First Principles Only.',
 }
 

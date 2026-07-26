@@ -10,7 +10,14 @@ import { ctaContent, siteConfig } from '../../data/content'
         <p v-for="(para, i) in ctaContent.paragraphs" :key="i">{{ para }}</p>
       </div>
       <div class="flex justify-center">
-        <button class="btn-primary btn-active">{{ ctaContent.cta }}</button>
+        <a
+          :href="siteConfig.bookingUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn-primary btn-active inline-flex items-center justify-center text-center"
+        >
+          {{ ctaContent.cta }}
+        </a>
       </div>
       <div class="flex justify-center gap-8 mt-8">
         <a :href="siteConfig.instagram" target="_blank" class="social-link">
@@ -47,6 +54,7 @@ import { ctaContent, siteConfig } from '../../data/content'
   border: none;
   cursor: pointer;
   transition: opacity 0.3s ease;
+  text-decoration: none;
 }
 .btn-primary:hover {
   opacity: 0.9;

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { heroContent } from '../../data/content'
+import { heroContent, siteConfig } from '../../data/content'
 </script>
 
 <template>
@@ -17,9 +17,14 @@ import { heroContent } from '../../data/content'
           <button class="btn-primary btn-active">
             {{ heroContent.primaryCta }}
           </button>
-          <button class="btn-ghost btn-active">
+          <a
+            :href="siteConfig.bookingUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-ghost btn-active flex items-center justify-center text-center"
+          >
             {{ heroContent.secondaryCta }}
-          </button>
+          </a>
         </div>
       </div>
     </div>
@@ -68,6 +73,7 @@ import { heroContent } from '../../data/content'
   border: none;
   cursor: pointer;
   transition: opacity 0.3s ease;
+  text-decoration: none;
 }
 .btn-primary:hover {
   opacity: 0.9;
@@ -84,6 +90,7 @@ import { heroContent } from '../../data/content'
   background: transparent;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  text-decoration: none;
 }
 .btn-ghost:hover {
   background-color: var(--btn-ghost-hover);
