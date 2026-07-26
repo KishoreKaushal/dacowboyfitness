@@ -1,0 +1,59 @@
+:root {
+  --color-surface: #141313;
+  --color-background: #141313;
+  --color-on-surface: #e5e2e1;
+  --color-on-surface-variant: #c4c7c8;
+  --color-primary: #ffffff;
+  --color-on-primary: #2f3131;
+  --color-surface-container: #201f1f;
+  --color-surface-container-lowest: #0e0e0e;
+  --color-on-background: #e5e2e1;
+  --glass-bg-start: rgba(22, 22, 22, 0.7);
+  --glass-bg-end: rgba(10, 10, 10, 0.7);
+  --glass-hover-bg: rgba(22, 22, 22, 0.7);
+  --border-subtle: rgba(255, 255, 255, 0.1);
+  --border-hover: rgba(255, 255, 255, 0.2);
+  --border-light: rgba(255, 255, 255, 0.05);
+  --border-medium: rgba(255, 255, 255, 0.15);
+  --noise-opacity: 0.02;
+  --hero-quote-color: rgba(255, 255, 255, 0.9);
+  --cta-heading-color: #ffffff;
+  --divider-color: rgba(255, 255, 255, 0.2);
+  --icon-muted: rgba(255, 255, 255, 0.3);
+  --text-glow: rgba(255, 255, 255, 0.1);
+  --body-bg: #0A0A0A;
+  --body-color: #e5e2e1;
+  --selection-bg: #ffffff;
+  --selection-text: #000000;
+  --btn-ghost-hover: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="light"] {
+  --color-surface: #fdf8f8;
+  --color-background: #fdf8f8;
+  --color-on-surface: #1c1b1b;
+  --color-on-surface-variant: #444748;
+  --color-primary: #000000;
+  --color-on-primary: #ffffff;
+  --color-surface-container: #f1ecec;
+  --color-surface-container-lowest: #ffffff;
+  --color-on-background: #1c1b1b;
+  --glass-bg-start: rgba(255, 255, 255, 0.4);
+  --glass-bg-end: rgba(245, 240, 237, 0.4);
+  --glass-hover-bg: rgba(255, 255, 255, 0.6);
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --border-light: rgba(0, 0, 0, 0.05);
+  --border-medium: rgba(0, 0, 0, 0.12);
+  --noise-opacity: 0.015;
+  --hero-quote-color: rgba(0, 0, 0, 0.9);
+  --cta-heading-color: #000000;
+  --divider-color: rgba(0, 0, 0, 0.2);
+  --icon-muted: rgba(0, 0, 0, 0.3);
+  --text-glow: rgba(0, 0, 0, 0.05);
+  --body-bg: #FAF8F5;
+  --body-color: #1c1b1b;
+  --selection-bg: #000000;
+  --selection-text: #ffffff;
+  --btn-ghost-hover: rgba(0, 0, 0, 0.05);
+}
