@@ -1,0 +1,59 @@
+[debug] [2026-07-26T10:31:15.798Z] ----------------------------------------------------------------------
+[debug] [2026-07-26T10:31:15.805Z] Command:       /home/kaushalk/.nvm/versions/node/v24.12.0/bin/node /home/kaushalk/.nvm/versions/node/v24.12.0/bin/firebase init hosting
+[debug] [2026-07-26T10:31:15.805Z] CLI Version:   15.24.0
+[debug] [2026-07-26T10:31:15.806Z] Platform:      linux
+[debug] [2026-07-26T10:31:15.806Z] Node Version:  v24.12.0
+[debug] [2026-07-26T10:31:15.806Z] Detected Agent: unknown
+[debug] [2026-07-26T10:31:15.806Z] Time:          Sun Jul 26 2026 16:01:15 GMT+0530 (India Standard Time)
+[debug] [2026-07-26T10:31:15.806Z] ----------------------------------------------------------------------
+[debug] 
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/kaushalk/prj/dacowboyfitness
+
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] 
+[debug] [2026-07-26T10:31:16.783Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2026-07-26T10:31:16.783Z] > authorizing via signed-in user (kshr4kshl@gmail.com)
+[debug] [2026-07-26T10:31:16.796Z] Checked if tokens are valid: true, expires at: 1785065383338
+[debug] [2026-07-26T10:31:16.796Z] Checked if tokens are valid: true, expires at: 1785065383338
+[debug] [2026-07-26T10:31:16.797Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website [none]
+[debug] [2026-07-26T10:31:17.523Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website 200
+[debug] [2026-07-26T10:31:17.523Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website {"projectId":"dacowboyfitness-website","projectNumber":"219912124911","displayName":"dacowboyfitness","name":"projects/dacowboyfitness-website","resources":{"hostingSite":"dacowboyfitness-website"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_5badf252-b443-44e9-b4a8-eee5953f4348"}
+[info] i  Using project dacowboyfitness-website (dacowboyfitness) . 
+[info] 
+=== Hosting Setup
+[debug] [2026-07-26T10:31:17.535Z] Checked if tokens are valid: true, expires at: 1785065383338
+[debug] [2026-07-26T10:31:17.535Z] Checked if tokens are valid: true, expires at: 1785065383338
+[debug] [2026-07-26T10:31:17.535Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website [none]
+[debug] [2026-07-26T10:31:17.922Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website 200
+[debug] [2026-07-26T10:31:17.923Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/dacowboyfitness-website {"projectId":"dacowboyfitness-website","projectNumber":"219912124911","displayName":"dacowboyfitness","name":"projects/dacowboyfitness-website","resources":{"hostingSite":"dacowboyfitness-website"},"state":"ACTIVE","labels":{"firebase":"enabled"},"etag":"1_5badf252-b443-44e9-b4a8-eee5953f4348"}
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2026-07-26T10:32:17.012Z] ExitPromptError: User force closed the prompt with SIGINT
+    at Interface.sigint (/home/kaushalk/.nvm/versions/node/v24.12.0/lib/node_modules/firebase-tools/node_modules/@inquirer/core/dist/commonjs/lib/create-prompt.js:101:37)
+    at Interface.emit (node:events:508:28)
+    at [_ttyWrite] [as _ttyWrite] (node:internal/readline/interface:1327:18)
+    at ReadStream.onkeypress (node:internal/readline/interface:284:20)
+    at ReadStream.emit (node:events:520:35)
+    at emitKeys (node:internal/readline/utils:371:14)
+    at emitKeys.next (<anonymous>)
+    at ReadStream.onData (node:internal/readline/emitKeypressEvents:64:36)
+    at ReadStream.emit (node:events:508:28)
+    at addChunk (node:internal/streams/readable:559:12)
+[error] 
+[error] Error: An unexpected error has occurred.
