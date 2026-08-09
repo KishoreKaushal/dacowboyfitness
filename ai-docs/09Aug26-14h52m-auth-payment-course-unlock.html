@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<!-- saved from url=(0102)http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DaCowboy Fitness — Auth, payment &amp; course unlock (Firebase + Razorpay + Curriq)</title>
+  <style>
+    :root {
+      --bg: #0a0a0c; --panel: #131318; --panel2: #1a1a22; --border: #26262e;
+      --text: #e6e6ea; --muted: #8b8b96; --lime: #c6ff3d; --cyan: #3de6ff;
+      --pink: #ff4dd8; --amber: #ffb84d; --violet: #a78bfa; --green: #3ddc84;
+    }
+    * { box-sizing: border-box; }
+    html, body { max-width: 100%; overflow-x: hidden; }
+    body { margin: 0; padding: 28px 40px 80px; background: var(--bg); color: var(--text);
+      font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; }
+    a { color: var(--cyan); }
+    h1 { margin: 0 0 4px; font-size: 23px; }
+    .sub { margin: 0 0 14px; color: var(--muted); font-size: 13px; }
+    section { margin: 28px 0; scroll-margin-top: 16px; }
+    h2 { margin: 0 0 12px; padding-bottom: 6px; border-bottom: 1px solid var(--border);
+      color: var(--lime); font-size: 15px; letter-spacing: 0.03em; text-transform: uppercase; }
+    h3 { margin: 16px 0 6px; color: var(--pink); font-size: 13px; }
+    h4 { margin: 14px 0 6px; color: var(--cyan); font-size: 12px; }
+    p { margin: 0 0 10px; }
+    ul, ol { margin: 0 0 10px; padding-left: 20px; }
+    li { margin: 4px 0; }
+    code { padding: 1px 5px; border-radius: 4px; background: #1c1c22; font-size: 0.88em;
+      white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere; }
+    pre { margin: 8px 0; padding: 12px 14px; border: 1px solid var(--border); border-radius: 8px;
+      background: #111116; font-size: 12.5px; line-height: 1.5;
+      white-space: pre-wrap !important; word-break: break-word; overflow-wrap: anywhere; }
+    pre code { padding: 0; background: none; font-size: inherit; }
+    table { width: 100%; margin: 6px 0; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 7px 10px; border: 1px solid var(--border); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    th { background: var(--panel); color: var(--muted); font-weight: 600; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .card { min-width: 0; padding: 16px 18px; border: 1px solid var(--border); border-radius: 10px; background: var(--panel); }
+    .card h3, .card h4 { margin-top: 0; }
+    .diagram { min-width: 0; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: #111116; }
+    .mermaid { display: flex; justify-content: center; background: #111116; }
+    .mermaid svg { max-width: 100%; height: auto; background: #111116; }
+    .mermaid .node rect, .mermaid .node circle, .mermaid .node ellipse, .mermaid .node polygon, .mermaid .node path { fill: var(--panel) !important; stroke: var(--cyan) !important; }
+    .mermaid .cluster rect { fill: #111116 !important; stroke: var(--border) !important; }
+    .mermaid .flowchart-link, .mermaid .edgePath path { stroke: var(--muted) !important; }
+    .mermaid marker path { fill: var(--muted) !important; stroke: var(--muted) !important; }
+    .mermaid text, .mermaid .label { fill: var(--text) !important; color: var(--text) !important; }
+    .mermaid .actor { fill: var(--panel) !important; stroke: var(--cyan) !important; }
+    .mermaid .messageText, .mermaid .noteText, .mermaid .loopText { fill: var(--text) !important; }
+    .mermaid .messageLine0, .mermaid .messageLine1 { stroke: var(--muted) !important; }
+    .mermaid .note { fill: #191510 !important; stroke: var(--amber) !important; }
+    .cap { margin: 6px 2px 0; color: var(--muted); font-size: 12px; text-align: center; }
+    .note { margin: 10px 0; padding: 8px 12px; border-left: 3px solid var(--cyan); border-radius: 0 8px 8px 0; background: #10161a; font-size: 13px; }
+    .note.warn { border-left-color: var(--amber); background: #191510; }
+    .note.good { border-left-color: var(--green); background: #10190f; }
+    .note.bad { border-left-color: var(--pink); background: #1a1016; }
+    .tag { display: inline-block; padding: 1px 6px; border: 1px solid currentColor; border-radius: 4px; letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap; color: var(--cyan); font-size: 10px; }
+    .tag.done { color: var(--green); } .tag.warn { color: var(--amber); } .tag.sec { color: var(--pink); }
+    .muted { color: var(--muted); } .done { color: var(--green); } .amber { color: var(--amber); } .pink { color: var(--pink); } .lime { color: var(--lime); }
+    .stepnum { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; margin-right: 8px; border-radius: 50%; background: var(--lime); color: #0a0a0c; font-size: 12px; font-weight: 700; vertical-align: middle; }
+    .docs { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 34px; align-items: start; }
+    .docnav { position: sticky; top: 18px; align-self: start; padding-right: 14px; border-right: 1px solid var(--border); font-size: 13px; }
+    .docnav strong { display: block; margin: 0 0 8px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .docnav a { display: block; margin: 5px 0; color: var(--text); text-decoration: none; }
+    .docnav a:hover { color: var(--cyan); }
+    .docnav .n2 { padding-left: 12px; color: var(--muted); font-size: 12px; }
+    @media (max-width: 900px) {
+      body { padding: 20px 18px 60px; }
+      .grid { grid-template-columns: 1fr; }
+      .docs { grid-template-columns: 1fr; gap: 8px; }
+      .docnav { position: static; border-right: 0; border-bottom: 1px solid var(--border); padding: 0 0 12px; margin-bottom: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Auth, payment &amp; course unlock</h1>
+    <p class="sub">DaCowboy Fitness · Firebase (Google sign-in + Firestore) + Razorpay test + Curriq · build guide v0.1</p>
+    <span class="tag done">Free-tier friendly</span>
+    <span class="tag">Vue + Firebase</span>
+    <span class="tag warn">Razorpay sandbox</span>
+  </header>
+
+  <div class="docs">
+    <nav class="docnav">
+      <strong>On this page</strong>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#build">What this builds</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#model">The unlock model</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#arch">Architecture</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#free">Free-tier reality</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#data">Data model</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s1" class="n2">1 · Firebase + Google</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s2" class="n2">2 · Sign-in in Vue</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s3" class="n2">3 · Razorpay order</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s4" class="n2">4 · Webhook → unlock</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s5" class="n2">5 · Curriq token</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#s6" class="n2">6 · Play the course</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#modelb">Model B (read key)</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#isolation">Isolation &amp; expiry</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#security">Security checklist</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#rules">Firestore rules</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#test">Test plan</a>
+      <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#cost">Cost</a>
+    </nav>
+
+    <main>
+      <section id="build">
+        <h2>What this builds</h2>
+        <p>The site (<code>dacowboyfitness.com</code>) is a static Vue app on Firebase Hosting. This guide adds three things on top of it, staying on free tiers:</p>
+        <ul>
+          <li><strong>Sign in with Google</strong> — Firebase Authentication (no passwords to store).</li>
+          <li><strong>Identity + entitlement store</strong> — Firestore: who the user is and which courses they've paid for.</li>
+          <li><strong>Paid unlock</strong> — Razorpay (test/sandbox now) confirms a payment, your backend records the entitlement, and only then does the viewer get a Curriq student token to watch the videos.</li>
+        </ul>
+        <p>It plugs into the player from the companion guide (<code>docs/ai-docs/guides/…-curriq-integration-guide.html</code>): everything here produces the authorized playback the player renders.</p>
+        <div class="note"><strong>Prerequisite:</strong> the course + 5 videos must already be in Curriq (a one-time write-key script — companion guide Step 2 / ledger Work Package H). This guide is about <em>access</em>, not authoring.</div>
+      </section>
+
+      <section id="model">
+        <h2>The unlock model — read this first</h2>
+        <div class="note warn">
+          <strong>Razorpay does not talk to Curriq, and Curriq has no “unlock this course” endpoint.</strong> Curriq (headless-lms) has no entitlement store — it gates AUTHENTICATED video purely on the presence of a valid student token (verified: <code>access/policy.ts:12-13</code>, gating is tenant-wide). So the unlock is realised on <em>your</em> side:
+        </div>
+        <ol>
+          <li>Razorpay's webhook calls <strong>your</strong> backend when a payment is captured.</li>
+          <li>Your backend writes an <strong>entitlement</strong> row to <strong>your</strong> Firestore (<code>uid</code> + <code>courseId</code> → paid).</li>
+          <li>When the viewer opens the course, your <strong>token endpoint</strong> checks that entitlement and, only if paid, mints a Curriq student token.</li>
+          <li>Curriq sees a valid token and streams the signed video. It never learns about the payment.</li>
+        </ol>
+        <p class="note">This is the correct headless split: money + identity + entitlement are yours; content + secure delivery are Curriq's. Wanting Razorpay to “tell Curriq” directly would require a per-course entitlement feature in the product — that's on the roadmap (see the ledger's “Next iterations”), not in this beta.</p>
+      </section>
+
+      <section id="arch">
+        <h2>Architecture</h2>
+        <div class="diagram">
+          <pre class="mermaid" data-processed="true"><svg id="mermaid-1786280367344" width="100%" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="max-width: 1695.5px;" viewBox="-50 -10 1695.5 1107" role="graphics-document document" aria-roledescription="sequence"><g><rect x="1445.5" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="C" rx="3" ry="3" class="actor actor-bottom"></rect><text x="1520.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1520.5" dy="0">Curriq API</tspan></text></g><g><rect x="1245.5" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="FS" rx="3" ry="3" class="actor actor-bottom"></rect><text x="1320.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1320.5" dy="0">Firestore</tspan></text></g><g><rect x="1045.5" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="RZ" rx="3" ry="3" class="actor actor-bottom"></rect><text x="1120.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1120.5" dy="0">Razorpay (test)</tspan></text></g><g><rect x="672.5" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="Fn" rx="3" ry="3" class="actor actor-bottom"></rect><text x="747.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="747.5" dy="0">Your functions</tspan></text></g><g><rect x="472.5" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="FA" rx="3" ry="3" class="actor actor-bottom"></rect><text x="547.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="547.5" dy="0">Firebase Auth</tspan></text></g><g><rect x="200" y="1021" fill="#eaeaea" stroke="#666" width="211" height="65" name="V" rx="3" ry="3" class="actor actor-bottom"></rect><text x="305.5" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="305.5" dy="0">Vue app (Firebase Hosting)</tspan></text></g><g><rect x="0" y="1021" fill="#eaeaea" stroke="#666" width="150" height="65" name="U" rx="3" ry="3" class="actor actor-bottom"></rect><text x="75" y="1053.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="75" dy="0">Visitor</tspan></text></g><g><line id="actor6" x1="1520.5" y1="65" x2="1520.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="C" data-et="life-line" data-id="C"></line><g id="root-6" data-et="participant" data-type="participant" data-id="C"><rect x="1445.5" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="C" rx="3" ry="3" class="actor actor-top"></rect><text x="1520.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1520.5" dy="0">Curriq API</tspan></text></g></g><g><line id="actor5" x1="1320.5" y1="65" x2="1320.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="FS" data-et="life-line" data-id="FS"></line><g id="root-5" data-et="participant" data-type="participant" data-id="FS"><rect x="1245.5" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="FS" rx="3" ry="3" class="actor actor-top"></rect><text x="1320.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1320.5" dy="0">Firestore</tspan></text></g></g><g><line id="actor4" x1="1120.5" y1="65" x2="1120.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="RZ" data-et="life-line" data-id="RZ"></line><g id="root-4" data-et="participant" data-type="participant" data-id="RZ"><rect x="1045.5" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="RZ" rx="3" ry="3" class="actor actor-top"></rect><text x="1120.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="1120.5" dy="0">Razorpay (test)</tspan></text></g></g><g><line id="actor3" x1="747.5" y1="65" x2="747.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="Fn" data-et="life-line" data-id="Fn"></line><g id="root-3" data-et="participant" data-type="participant" data-id="Fn"><rect x="672.5" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="Fn" rx="3" ry="3" class="actor actor-top"></rect><text x="747.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="747.5" dy="0">Your functions</tspan></text></g></g><g><line id="actor2" x1="547.5" y1="65" x2="547.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="FA" data-et="life-line" data-id="FA"></line><g id="root-2" data-et="participant" data-type="participant" data-id="FA"><rect x="472.5" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="FA" rx="3" ry="3" class="actor actor-top"></rect><text x="547.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="547.5" dy="0">Firebase Auth</tspan></text></g></g><g><line id="actor1" x1="305.5" y1="65" x2="305.5" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="V" data-et="life-line" data-id="V"></line><g id="root-1" data-et="participant" data-type="participant" data-id="V"><rect x="200" y="0" fill="#eaeaea" stroke="#666" width="211" height="65" name="V" rx="3" ry="3" class="actor actor-top"></rect><text x="305.5" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="305.5" dy="0">Vue app (Firebase Hosting)</tspan></text></g></g><g><line id="actor0" x1="75" y1="65" x2="75" y2="1021" class="actor-line 200" stroke-width="0.5px" stroke="#999" name="U" data-et="life-line" data-id="U"></line><g id="root-0" data-et="participant" data-type="participant" data-id="U"><rect x="0" y="0" fill="#eaeaea" stroke="#666" width="150" height="65" name="U" rx="3" ry="3" class="actor actor-top"></rect><text x="75" y="32.5" dominant-baseline="central" alignment-baseline="central" class="actor actor-box" style="text-anchor: middle; font-size: 16px; font-weight: 400;"><tspan x="75" dy="0">Visitor</tspan></text></g></g><style>#mermaid-1786280367344{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:14px;fill:#e6e6ea;}@keyframes edge-animation-frame{from{stroke-dashoffset:0;}}@keyframes dash{to{stroke-dashoffset:0;}}#mermaid-1786280367344 .edge-animation-slow{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 50s linear infinite;stroke-linecap:round;}#mermaid-1786280367344 .edge-animation-fast{stroke-dasharray:9,5!important;stroke-dashoffset:900;animation:dash 20s linear infinite;stroke-linecap:round;}#mermaid-1786280367344 .error-icon{fill:#131318;}#mermaid-1786280367344 .error-text{fill:#ecece7;stroke:#ecece7;}#mermaid-1786280367344 .edge-thickness-normal{stroke-width:1px;}#mermaid-1786280367344 .edge-thickness-thick{stroke-width:3.5px;}#mermaid-1786280367344 .edge-pattern-solid{stroke-dasharray:0;}#mermaid-1786280367344 .edge-thickness-invisible{stroke-width:0;fill:none;}#mermaid-1786280367344 .edge-pattern-dashed{stroke-dasharray:3;}#mermaid-1786280367344 .edge-pattern-dotted{stroke-dasharray:2;}#mermaid-1786280367344 .marker{fill:#8b8b96;stroke:#8b8b96;}#mermaid-1786280367344 .marker.cross{stroke:#8b8b96;}#mermaid-1786280367344 svg{font-family:"trebuchet ms",verdana,arial,sans-serif;font-size:14px;}#mermaid-1786280367344 p{margin:0;}#mermaid-1786280367344 .actor{stroke:#3de6ff;fill:#131318;stroke-width:1;}#mermaid-1786280367344 rect.actor.outer-path[data-look="neo"]{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 rect.note[data-look="neo"]{stroke:hsl(52.6829268293, 60%, 93.9215686275%);fill:#fff5ad;filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 text.actor&gt;tspan{fill:#e6e6ea;stroke:none;}#mermaid-1786280367344 .actor-line{stroke:#3de6ff;}#mermaid-1786280367344 .innerArc{stroke-width:1.5;stroke-dasharray:none;}#mermaid-1786280367344 .messageLine0{stroke-width:1.5;stroke-dasharray:none;stroke:#e6e6ea;}#mermaid-1786280367344 .messageLine1{stroke-width:1.5;stroke-dasharray:2,2;stroke:#e6e6ea;}#mermaid-1786280367344 [id$="-arrowhead"] path{fill:#e6e6ea;stroke:#e6e6ea;}#mermaid-1786280367344 .sequenceNumber{fill:#747469;}#mermaid-1786280367344 [id$="-sequencenumber"]{fill:#e6e6ea;}#mermaid-1786280367344 [id$="-crosshead"] path{fill:#e6e6ea;stroke:#e6e6ea;}#mermaid-1786280367344 .messageText{fill:#e6e6ea;stroke:none;}#mermaid-1786280367344 .labelBox{stroke:#3de6ff;fill:#131318;filter:none;}#mermaid-1786280367344 .labelText,#mermaid-1786280367344 .labelText&gt;tspan{fill:#e6e6ea;stroke:none;}#mermaid-1786280367344 .loopText,#mermaid-1786280367344 .loopText&gt;tspan{fill:#e6e6ea;stroke:none;}#mermaid-1786280367344 .sectionTitle,#mermaid-1786280367344 .sectionTitle&gt;tspan{fill:#e6e6ea;stroke:none;}#mermaid-1786280367344 .loopLine{stroke-width:2px;stroke-dasharray:2,2;stroke:#3de6ff;fill:#3de6ff;}#mermaid-1786280367344 .note{stroke:hsl(52.6829268293, 60%, 93.9215686275%);fill:#fff5ad;}#mermaid-1786280367344 .noteText,#mermaid-1786280367344 .noteText&gt;tspan{fill:#333;stroke:none;font-weight:normal;}#mermaid-1786280367344 .activation0{fill:#1a1a22;stroke:hsl(240, 13.3333333333%, 1.7647058824%);}#mermaid-1786280367344 .activation1{fill:#1a1a22;stroke:hsl(240, 13.3333333333%, 1.7647058824%);}#mermaid-1786280367344 .activation2{fill:#1a1a22;stroke:hsl(240, 13.3333333333%, 1.7647058824%);}#mermaid-1786280367344 .actorPopupMenu{position:absolute;}#mermaid-1786280367344 .actorPopupMenuPanel{position:absolute;fill:#131318;box-shadow:0px 8px 16px 0px rgba(0,0,0,0.2);filter:drop-shadow(3px 5px 2px rgb(0 0 0 / 0.4));}#mermaid-1786280367344 .actor-man circle,#mermaid-1786280367344 line{fill:#131318;stroke-width:2px;}#mermaid-1786280367344 g rect.rect{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));stroke:#3de6ff;}#mermaid-1786280367344 .node .neo-node{stroke:#3de6ff;}#mermaid-1786280367344 [data-look="neo"].node rect,#mermaid-1786280367344 [data-look="neo"].cluster rect,#mermaid-1786280367344 [data-look="neo"].node polygon{stroke:url(#mermaid-1786280367344-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 [data-look="neo"].swimlane.cluster rect{filter:none;}#mermaid-1786280367344 [data-look="neo"].node path{stroke:url(#mermaid-1786280367344-gradient);stroke-width:1px;}#mermaid-1786280367344 [data-look="neo"].node .outer-path{filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 [data-look="neo"].node .neo-line path{stroke:#3de6ff;filter:none;}#mermaid-1786280367344 [data-look="neo"].node circle{stroke:url(#mermaid-1786280367344-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 [data-look="neo"].node circle .state-start{fill:#000000;}#mermaid-1786280367344 [data-look="neo"].icon-shape .icon{fill:url(#mermaid-1786280367344-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 [data-look="neo"].icon-shape .icon-neo path{stroke:url(#mermaid-1786280367344-gradient);filter:drop-shadow( 1px 2px 2px rgba(185,185,185,1));}#mermaid-1786280367344 :root{--mermaid-font-family:"trebuchet ms",verdana,arial,sans-serif;}</style><g></g><defs><symbol id="mermaid-1786280367344-computer" width="24" height="24"><path transform="scale(.5)" d="M2 2v13h20v-13h-20zm18 11h-16v-9h16v9zm-10.228 6l.466-1h3.524l.467 1h-4.457zm14.228 3h-24l2-6h2.104l-1.33 4h18.45l-1.297-4h2.073l2 6zm-5-10h-14v-7h14v7z"></path></symbol></defs><defs><symbol id="mermaid-1786280367344-database" fill-rule="evenodd" clip-rule="evenodd"><path transform="scale(.5)" d="M12.258.001l.256.004.255.005.253.008.251.01.249.012.247.015.246.016.242.019.241.02.239.023.236.024.233.027.231.028.229.031.225.032.223.034.22.036.217.038.214.04.211.041.208.043.205.045.201.046.198.048.194.05.191.051.187.053.183.054.18.056.175.057.172.059.168.06.163.061.16.063.155.064.15.066.074.033.073.033.071.034.07.034.069.035.068.035.067.035.066.035.064.036.064.036.062.036.06.036.06.037.058.037.058.037.055.038.055.038.053.038.052.038.051.039.05.039.048.039.047.039.045.04.044.04.043.04.041.04.04.041.039.041.037.041.036.041.034.041.033.042.032.042.03.042.029.042.027.042.026.043.024.043.023.043.021.043.02.043.018.044.017.043.015.044.013.044.012.044.011.045.009.044.007.045.006.045.004.045.002.045.001.045v17l-.001.045-.002.045-.004.045-.006.045-.007.045-.009.044-.011.045-.012.044-.013.044-.015.044-.017.043-.018.044-.02.043-.021.043-.023.043-.024.043-.026.043-.027.042-.029.042-.03.042-.032.042-.033.042-.034.041-.036.041-.037.041-.039.041-.04.041-.041.04-.043.04-.044.04-.045.04-.047.039-.048.039-.05.039-.051.039-.052.038-.053.038-.055.038-.055.038-.058.037-.058.037-.06.037-.06.036-.062.036-.064.036-.064.036-.066.035-.067.035-.068.035-.069.035-.07.034-.071.034-.073.033-.074.033-.15.066-.155.064-.16.063-.163.061-.168.06-.172.059-.175.057-.18.056-.183.054-.187.053-.191.051-.194.05-.198.048-.201.046-.205.045-.208.043-.211.041-.214.04-.217.038-.22.036-.223.034-.225.032-.229.031-.231.028-.233.027-.236.024-.239.023-.241.02-.242.019-.246.016-.247.015-.249.012-.251.01-.253.008-.255.005-.256.004-.258.001-.258-.001-.256-.004-.255-.005-.253-.008-.251-.01-.249-.012-.247-.015-.245-.016-.243-.019-.241-.02-.238-.023-.236-.024-.234-.027-.231-.028-.228-.031-.226-.032-.223-.034-.22-.036-.217-.038-.214-.04-.211-.041-.208-.043-.204-.045-.201-.046-.198-.048-.195-.05-.19-.051-.187-.053-.184-.054-.179-.056-.176-.057-.172-.059-.167-.06-.164-.061-.159-.063-.155-.064-.151-.066-.074-.033-.072-.033-.072-.034-.07-.034-.069-.035-.068-.035-.067-.035-.066-.035-.064-.036-.063-.036-.062-.036-.061-.036-.06-.037-.058-.037-.057-.037-.056-.038-.055-.038-.053-.038-.052-.038-.051-.039-.049-.039-.049-.039-.046-.039-.046-.04-.044-.04-.043-.04-.041-.04-.04-.041-.039-.041-.037-.041-.036-.041-.034-.041-.033-.042-.032-.042-.03-.042-.029-.042-.027-.042-.026-.043-.024-.043-.023-.043-.021-.043-.02-.043-.018-.044-.017-.043-.015-.044-.013-.044-.012-.044-.011-.045-.009-.044-.007-.045-.006-.045-.004-.045-.002-.045-.001-.045v-17l.001-.045.002-.045.004-.045.006-.045.007-.045.009-.044.011-.045.012-.044.013-.044.015-.044.017-.043.018-.044.02-.043.021-.043.023-.043.024-.043.026-.043.027-.042.029-.042.03-.042.032-.042.033-.042.034-.041.036-.041.037-.041.039-.041.04-.041.041-.04.043-.04.044-.04.046-.04.046-.039.049-.039.049-.039.051-.039.052-.038.053-.038.055-.038.056-.038.057-.037.058-.037.06-.037.061-.036.062-.036.063-.036.064-.036.066-.035.067-.035.068-.035.069-.035.07-.034.072-.034.072-.033.074-.033.151-.066.155-.064.159-.063.164-.061.167-.06.172-.059.176-.057.179-.056.184-.054.187-.053.19-.051.195-.05.198-.048.201-.046.204-.045.208-.043.211-.041.214-.04.217-.038.22-.036.223-.034.226-.032.228-.031.231-.028.234-.027.236-.024.238-.023.241-.02.243-.019.245-.016.247-.015.249-.012.251-.01.253-.008.255-.005.256-.004.258-.001.258.001zm-9.258 20.499v.01l.001.021.003.021.004.022.005.021.006.022.007.022.009.023.01.022.011.023.012.023.013.023.015.023.016.024.017.023.018.024.019.024.021.024.022.025.023.024.024.025.052.049.056.05.061.051.066.051.07.051.075.051.079.052.084.052.088.052.092.052.097.052.102.051.105.052.11.052.114.051.119.051.123.051.127.05.131.05.135.05.139.048.144.049.147.047.152.047.155.047.16.045.163.045.167.043.171.043.176.041.178.041.183.039.187.039.19.037.194.035.197.035.202.033.204.031.209.03.212.029.216.027.219.025.222.024.226.021.23.02.233.018.236.016.24.015.243.012.246.01.249.008.253.005.256.004.259.001.26-.001.257-.004.254-.005.25-.008.247-.011.244-.012.241-.014.237-.016.233-.018.231-.021.226-.021.224-.024.22-.026.216-.027.212-.028.21-.031.205-.031.202-.034.198-.034.194-.036.191-.037.187-.039.183-.04.179-.04.175-.042.172-.043.168-.044.163-.045.16-.046.155-.046.152-.047.148-.048.143-.049.139-.049.136-.05.131-.05.126-.05.123-.051.118-.052.114-.051.11-.052.106-.052.101-.052.096-.052.092-.052.088-.053.083-.051.079-.052.074-.052.07-.051.065-.051.06-.051.056-.05.051-.05.023-.024.023-.025.021-.024.02-.024.019-.024.018-.024.017-.024.015-.023.014-.024.013-.023.012-.023.01-.023.01-.022.008-.022.006-.022.006-.022.004-.022.004-.021.001-.021.001-.021v-4.127l-.077.055-.08.053-.083.054-.085.053-.087.052-.09.052-.093.051-.095.05-.097.05-.1.049-.102.049-.105.048-.106.047-.109.047-.111.046-.114.045-.115.045-.118.044-.12.043-.122.042-.124.042-.126.041-.128.04-.13.04-.132.038-.134.038-.135.037-.138.037-.139.035-.142.035-.143.034-.144.033-.147.032-.148.031-.15.03-.151.03-.153.029-.154.027-.156.027-.158.026-.159.025-.161.024-.162.023-.163.022-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.011-.178.01-.179.008-.179.008-.181.006-.182.005-.182.004-.184.003-.184.002h-.37l-.184-.002-.184-.003-.182-.004-.182-.005-.181-.006-.179-.008-.179-.008-.178-.01-.176-.011-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.022-.162-.023-.161-.024-.159-.025-.157-.026-.156-.027-.155-.027-.153-.029-.151-.03-.15-.03-.148-.031-.146-.032-.145-.033-.143-.034-.141-.035-.14-.035-.137-.037-.136-.037-.134-.038-.132-.038-.13-.04-.128-.04-.126-.041-.124-.042-.122-.042-.12-.044-.117-.043-.116-.045-.113-.045-.112-.046-.109-.047-.106-.047-.105-.048-.102-.049-.1-.049-.097-.05-.095-.05-.093-.052-.09-.051-.087-.052-.085-.053-.083-.054-.08-.054-.077-.054v4.127zm0-5.654v.011l.001.021.003.021.004.021.005.022.006.022.007.022.009.022.01.022.011.023.012.023.013.023.015.024.016.023.017.024.018.024.019.024.021.024.022.024.023.025.024.024.052.05.056.05.061.05.066.051.07.051.075.052.079.051.084.052.088.052.092.052.097.052.102.052.105.052.11.051.114.051.119.052.123.05.127.051.131.05.135.049.139.049.144.048.147.048.152.047.155.046.16.045.163.045.167.044.171.042.176.042.178.04.183.04.187.038.19.037.194.036.197.034.202.033.204.032.209.03.212.028.216.027.219.025.222.024.226.022.23.02.233.018.236.016.24.014.243.012.246.01.249.008.253.006.256.003.259.001.26-.001.257-.003.254-.006.25-.008.247-.01.244-.012.241-.015.237-.016.233-.018.231-.02.226-.022.224-.024.22-.025.216-.027.212-.029.21-.03.205-.032.202-.033.198-.035.194-.036.191-.037.187-.039.183-.039.179-.041.175-.042.172-.043.168-.044.163-.045.16-.045.155-.047.152-.047.148-.048.143-.048.139-.05.136-.049.131-.05.126-.051.123-.051.118-.051.114-.052.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.051.07-.052.065-.051.06-.05.056-.051.051-.049.023-.025.023-.024.021-.025.02-.024.019-.024.018-.024.017-.024.015-.023.014-.023.013-.024.012-.022.01-.023.01-.023.008-.022.006-.022.006-.022.004-.021.004-.022.001-.021.001-.021v-4.139l-.077.054-.08.054-.083.054-.085.052-.087.053-.09.051-.093.051-.095.051-.097.05-.1.049-.102.049-.105.048-.106.047-.109.047-.111.046-.114.045-.115.044-.118.044-.12.044-.122.042-.124.042-.126.041-.128.04-.13.039-.132.039-.134.038-.135.037-.138.036-.139.036-.142.035-.143.033-.144.033-.147.033-.148.031-.15.03-.151.03-.153.028-.154.028-.156.027-.158.026-.159.025-.161.024-.162.023-.163.022-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.011-.178.009-.179.009-.179.007-.181.007-.182.005-.182.004-.184.003-.184.002h-.37l-.184-.002-.184-.003-.182-.004-.182-.005-.181-.007-.179-.007-.179-.009-.178-.009-.176-.011-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.022-.162-.023-.161-.024-.159-.025-.157-.026-.156-.027-.155-.028-.153-.028-.151-.03-.15-.03-.148-.031-.146-.033-.145-.033-.143-.033-.141-.035-.14-.036-.137-.036-.136-.037-.134-.038-.132-.039-.13-.039-.128-.04-.126-.041-.124-.042-.122-.043-.12-.043-.117-.044-.116-.044-.113-.046-.112-.046-.109-.046-.106-.047-.105-.048-.102-.049-.1-.049-.097-.05-.095-.051-.093-.051-.09-.051-.087-.053-.085-.052-.083-.054-.08-.054-.077-.054v4.139zm0-5.666v.011l.001.02.003.022.004.021.005.022.006.021.007.022.009.023.01.022.011.023.012.023.013.023.015.023.016.024.017.024.018.023.019.024.021.025.022.024.023.024.024.025.052.05.056.05.061.05.066.051.07.051.075.052.079.051.084.052.088.052.092.052.097.052.102.052.105.051.11.052.114.051.119.051.123.051.127.05.131.05.135.05.139.049.144.048.147.048.152.047.155.046.16.045.163.045.167.043.171.043.176.042.178.04.183.04.187.038.19.037.194.036.197.034.202.033.204.032.209.03.212.028.216.027.219.025.222.024.226.021.23.02.233.018.236.017.24.014.243.012.246.01.249.008.253.006.256.003.259.001.26-.001.257-.003.254-.006.25-.008.247-.01.244-.013.241-.014.237-.016.233-.018.231-.02.226-.022.224-.024.22-.025.216-.027.212-.029.21-.03.205-.032.202-.033.198-.035.194-.036.191-.037.187-.039.183-.039.179-.041.175-.042.172-.043.168-.044.163-.045.16-.045.155-.047.152-.047.148-.048.143-.049.139-.049.136-.049.131-.051.126-.05.123-.051.118-.052.114-.051.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.052.07-.051.065-.051.06-.051.056-.05.051-.049.023-.025.023-.025.021-.024.02-.024.019-.024.018-.024.017-.024.015-.023.014-.024.013-.023.012-.023.01-.022.01-.023.008-.022.006-.022.006-.022.004-.022.004-.021.001-.021.001-.021v-4.153l-.077.054-.08.054-.083.053-.085.053-.087.053-.09.051-.093.051-.095.051-.097.05-.1.049-.102.048-.105.048-.106.048-.109.046-.111.046-.114.046-.115.044-.118.044-.12.043-.122.043-.124.042-.126.041-.128.04-.13.039-.132.039-.134.038-.135.037-.138.036-.139.036-.142.034-.143.034-.144.033-.147.032-.148.032-.15.03-.151.03-.153.028-.154.028-.156.027-.158.026-.159.024-.161.024-.162.023-.163.023-.165.021-.166.02-.167.019-.169.018-.169.017-.171.016-.173.015-.173.014-.175.013-.175.012-.177.01-.178.01-.179.009-.179.007-.181.006-.182.006-.182.004-.184.003-.184.001-.185.001-.185-.001-.184-.001-.184-.003-.182-.004-.182-.006-.181-.006-.179-.007-.179-.009-.178-.01-.176-.01-.176-.012-.175-.013-.173-.014-.172-.015-.171-.016-.17-.017-.169-.018-.167-.019-.166-.02-.165-.021-.163-.023-.162-.023-.161-.024-.159-.024-.157-.026-.156-.027-.155-.028-.153-.028-.151-.03-.15-.03-.148-.032-.146-.032-.145-.033-.143-.034-.141-.034-.14-.036-.137-.036-.136-.037-.134-.038-.132-.039-.13-.039-.128-.041-.126-.041-.124-.041-.122-.043-.12-.043-.117-.044-.116-.044-.113-.046-.112-.046-.109-.046-.106-.048-.105-.048-.102-.048-.1-.05-.097-.049-.095-.051-.093-.051-.09-.052-.087-.052-.085-.053-.083-.053-.08-.054-.077-.054v4.153zm8.74-8.179l-.257.004-.254.005-.25.008-.247.011-.244.012-.241.014-.237.016-.233.018-.231.021-.226.022-.224.023-.22.026-.216.027-.212.028-.21.031-.205.032-.202.033-.198.034-.194.036-.191.038-.187.038-.183.04-.179.041-.175.042-.172.043-.168.043-.163.045-.16.046-.155.046-.152.048-.148.048-.143.048-.139.049-.136.05-.131.05-.126.051-.123.051-.118.051-.114.052-.11.052-.106.052-.101.052-.096.052-.092.052-.088.052-.083.052-.079.052-.074.051-.07.052-.065.051-.06.05-.056.05-.051.05-.023.025-.023.024-.021.024-.02.025-.019.024-.018.024-.017.023-.015.024-.014.023-.013.023-.012.023-.01.023-.01.022-.008.022-.006.023-.006.021-.004.022-.004.021-.001.021-.001.021.001.021.001.021.004.021.004.022.006.021.006.023.008.022.01.022.01.023.012.023.013.023.014.023.015.024.017.023.018.024.019.024.02.025.021.024.023.024.023.025.051.05.056.05.06.05.065.051.07.052.074.051.079.052.083.052.088.052.092.052.096.052.101.052.106.052.11.052.114.052.118.051.123.051.126.051.131.05.136.05.139.049.143.048.148.048.152.048.155.046.16.046.163.045.168.043.172.043.175.042.179.041.183.04.187.038.191.038.194.036.198.034.202.033.205.032.21.031.212.028.216.027.22.026.224.023.226.022.231.021.233.018.237.016.241.014.244.012.247.011.25.008.254.005.257.004.26.001.26-.001.257-.004.254-.005.25-.008.247-.011.244-.012.241-.014.237-.016.233-.018.231-.021.226-.022.224-.023.22-.026.216-.027.212-.028.21-.031.205-.032.202-.033.198-.034.194-.036.191-.038.187-.038.183-.04.179-.041.175-.042.172-.043.168-.043.163-.045.16-.046.155-.046.152-.048.148-.048.143-.048.139-.049.136-.05.131-.05.126-.051.123-.051.118-.051.114-.052.11-.052.106-.052.101-.052.096-.052.092-.052.088-.052.083-.052.079-.052.074-.051.07-.052.065-.051.06-.05.056-.05.051-.05.023-.025.023-.024.021-.024.02-.025.019-.024.018-.024.017-.023.015-.024.014-.023.013-.023.012-.023.01-.023.01-.022.008-.022.006-.023.006-.021.004-.022.004-.021.001-.021.001-.021-.001-.021-.001-.021-.004-.021-.004-.022-.006-.021-.006-.023-.008-.022-.01-.022-.01-.023-.012-.023-.013-.023-.014-.023-.015-.024-.017-.023-.018-.024-.019-.024-.02-.025-.021-.024-.023-.024-.023-.025-.051-.05-.056-.05-.06-.05-.065-.051-.07-.052-.074-.051-.079-.052-.083-.052-.088-.052-.092-.052-.096-.052-.101-.052-.106-.052-.11-.052-.114-.052-.118-.051-.123-.051-.126-.051-.131-.05-.136-.05-.139-.049-.143-.048-.148-.048-.152-.048-.155-.046-.16-.046-.163-.045-.168-.043-.172-.043-.175-.042-.179-.041-.183-.04-.187-.038-.191-.038-.194-.036-.198-.034-.202-.033-.205-.032-.21-.031-.212-.028-.216-.027-.22-.026-.224-.023-.226-.022-.231-.021-.233-.018-.237-.016-.241-.014-.244-.012-.247-.011-.25-.008-.254-.005-.257-.004-.26-.001-.26.001z"></path></symbol></defs><defs><symbol id="mermaid-1786280367344-clock" width="24" height="24"><path transform="scale(.5)" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm5.848 12.459c.202.038.202.333.001.372-1.907.361-6.045 1.111-6.547 1.111-.719 0-1.301-.582-1.301-1.301 0-.512.77-5.447 1.125-7.445.034-.192.312-.181.343.014l.985 6.238 5.394 1.011z"></path></symbol></defs><defs><marker id="mermaid-1786280367344-arrowhead" refX="7.9" refY="5" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M -1 0 L 10 5 L 0 10 z"></path></marker></defs><defs><marker id="mermaid-1786280367344-crosshead" markerWidth="15" markerHeight="8" orient="auto" refX="4" refY="4.5"><path fill="none" stroke="#000000" stroke-width="1pt" d="M 1,2 L 6,7 M 6,2 L 1,7" style="stroke-dasharray: 0, 0;"></path></marker></defs><defs><marker id="mermaid-1786280367344-filled-head" refX="15.5" refY="7" markerWidth="20" markerHeight="28" orient="auto"><path d="M 18,7 L9,13 L14,7 L9,1 Z"></path></marker></defs><defs><marker id="mermaid-1786280367344-sequencenumber" refX="15" refY="15" markerWidth="60" markerHeight="40" orient="auto"><circle cx="15" cy="15" r="6"></circle></marker></defs><defs><marker id="mermaid-1786280367344-solidTopArrowHead" refX="7.9" refY="7.25" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 10 8 L 0 8 z"></path></marker></defs><defs><marker id="mermaid-1786280367344-solidBottomArrowHead" refX="7.9" refY="0.75" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 10 0 L 0 8 z"></path></marker></defs><defs><marker id="mermaid-1786280367344-stickTopArrowHead" refX="7.5" refY="7" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 0 L 7 7" stroke="black" stroke-width="1.5" fill="none"></path></marker></defs><defs><marker id="mermaid-1786280367344-stickBottomArrowHead" refX="7.5" refY="0" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M 0 7 L 7 0" stroke="black" stroke-width="1.5" fill="none"></path></marker></defs><text x="189" y="80" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">Sign in with Google</text><line x1="76" y1="117" x2="301.5" y2="117" class="messageLine0" data-et="message" data-id="i0" data-from="U" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="425" y="132" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">signInWithPopup</text><line x1="306.5" y1="169" x2="543.5" y2="169" class="messageLine0" data-et="message" data-id="i1" data-from="V" data-to="FA" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="428" y="184" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">Firebase user + ID token</text><line x1="546.5" y1="221" x2="309.5" y2="221" class="messageLine1" data-et="message" data-id="i2" data-from="FA" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><text x="189" y="236" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">Buy course</text><line x1="76" y1="273" x2="301.5" y2="273" class="messageLine0" data-et="message" data-id="i3" data-from="U" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="525" y="288" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">createOrder (ID token, courseId)</text><line x1="306.5" y1="325" x2="743.5" y2="325" class="messageLine0" data-et="message" data-id="i4" data-from="V" data-to="Fn" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="933" y="340" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">orders.create (amount, notes{uid,courseId})</text><line x1="748.5" y1="377" x2="1116.5" y2="377" class="messageLine0" data-et="message" data-id="i5" data-from="Fn" data-to="RZ" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="715" y="392" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">order_id -&gt; open Checkout</text><line x1="1119.5" y1="429" x2="309.5" y2="429" class="messageLine1" data-et="message" data-id="i6" data-from="RZ" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><text x="596" y="444" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">pays with test card</text><line x1="76" y1="481" x2="1116.5" y2="481" class="messageLine0" data-et="message" data-id="i7" data-from="U" data-to="RZ" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="936" y="496" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">webhook payment.captured (signed)</text><line x1="1119.5" y1="533" x2="751.5" y2="533" class="messageLine0" data-et="message" data-id="i8" data-from="RZ" data-to="Fn" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="1033" y="548" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">write entitlement {uid,courseId,paid}</text><line x1="748.5" y1="585" x2="1316.5" y2="585" class="messageLine0" data-et="message" data-id="i9" data-from="Fn" data-to="FS" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="189" y="600" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">Open course</text><line x1="76" y1="637" x2="301.5" y2="637" class="messageLine0" data-et="message" data-id="i10" data-from="U" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="525" y="652" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">courseToken (ID token, courseId)</text><line x1="306.5" y1="689" x2="743.5" y2="689" class="messageLine0" data-et="message" data-id="i11" data-from="V" data-to="Fn" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="1033" y="704" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">read entitlement (paid?)</text><line x1="748.5" y1="741" x2="1316.5" y2="741" class="messageLine0" data-et="message" data-id="i12" data-from="Fn" data-to="FS" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="1133" y="756" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">mintIdpToken + exchangeSsoToken</text><line x1="748.5" y1="793" x2="1516.5" y2="793" class="messageLine0" data-et="message" data-id="i13" data-from="Fn" data-to="C" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="1136" y="808" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">studentToken</text><line x1="1519.5" y1="845" x2="751.5" y2="845" class="messageLine1" data-et="message" data-id="i14" data-from="C" data-to="Fn" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><text x="528" y="860" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">studentToken</text><line x1="746.5" y1="897" x2="309.5" y2="897" class="messageLine1" data-et="message" data-id="i15" data-from="Fn" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line><text x="912" y="912" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">getCourseOutline + getVideoPlayback</text><line x1="306.5" y1="949" x2="1516.5" y2="949" class="messageLine0" data-et="message" data-id="i16" data-from="V" data-to="C" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="fill: none;"></line><text x="915" y="964" text-anchor="middle" dominant-baseline="middle" alignment-baseline="middle" class="messageText" dy="1em" style="font-size: 16px; font-weight: 400;">signed Mux playback</text><line x1="1519.5" y1="1001" x2="309.5" y2="1001" class="messageLine1" data-et="message" data-id="i17" data-from="C" data-to="V" stroke-width="2" stroke="none" marker-end="url(#mermaid-1786280367344-arrowhead)" style="stroke-dasharray: 3, 3; fill: none;"></line></svg></pre>
+        </div>
+      </section>
+
+      <section id="free">
+        <h2>Free-tier reality check</h2>
+        <p>What's free on Firebase's <strong>Spark</strong> plan, and the one thing that isn't.</p>
+        <table>
+          <thead><tr><th>Piece</th><th>Free?</th><th>Limit / note</th></tr></thead>
+          <tbody>
+            <tr><td>Firebase Auth (Google sign-in)</td><td class="done">Free</td><td>Effectively unlimited for this use.</td></tr>
+            <tr><td>Cloud Firestore</td><td class="done">Free (Spark)</td><td><strong>50,000 reads · 20,000 writes · 20,000 deletes per day</strong>; <strong>1 GiB stored</strong>; <strong>10 GiB egress/month</strong>; one free DB per project. A purchase = 1 write, opening a course = 1–2 reads → beta is nowhere near the cap.</td></tr>
+            <tr><td>Firebase Hosting</td><td class="done">Free (Spark)</td><td>Already in use (<code>firebase.json</code> → <code>dist</code>).</td></tr>
+            <tr><td>Cloud Functions (the 3 server functions)</td><td class="amber">Needs Blaze</td><td><strong>Cloud Functions require the Blaze (pay-as-you-go) plan.</strong> Blaze has a perpetual free monthly grant (2M invocations, 400k GB-s, etc.), so beta traffic costs <strong>≈ $0</strong> — but Blaze needs a billing account (a card on file).</td></tr>
+          </tbody>
+        </table>
+        <div class="note"><strong>Two ways to host the functions:</strong>
+          <ul>
+            <li><span class="tag done">Simplest</span> <strong>Firebase Blaze.</strong> Native <code>firebase-admin</code> (<code>verifyIdToken</code>, Firestore) and <code>firebase-functions</code>. Free at beta volume; requires a card. Recommended for speed.</li>
+            <li><span class="tag">Zero card</span> <strong>Cloudflare Workers</strong> (or Vercel/Netlify functions), 100k req/day free. Keep Firebase for Auth + Firestore + Hosting; run the 3 functions here. More plumbing: you verify the Firebase ID token by hand (RS256 JWT vs Google's public keys) and read Firestore over its REST API. Same logic, no Admin SDK.</li>
+          </ul>
+          The code below uses Firebase Functions; the logic ports 1:1 to Workers.
+        </div>
+      </section>
+
+      <section id="data">
+        <h2>Data model (Firestore)</h2>
+        <pre><code>users/{uid}
+  email, displayName, createdAt          // optional profile mirror of the Firebase user
+
+entitlements/{uid}/courses/{courseId}
+  paid: true
+  orderId: "order_XXXX"                  // Razorpay order that granted it
+  purchasedAt: 1723200000000</code></pre>
+        <p class="note">Keep entitlements in a subcollection keyed by <code>uid</code> so a user can read only their own, and only your backend writes them (see <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#rules">Firestore rules</a>).</p>
+      </section>
+
+      <section id="s1">
+        <h2><span class="stepnum">1</span>Firebase project + Google sign-in</h2>
+        <ol>
+          <li>Firebase console → your project → <strong>Authentication</strong> → <strong>Sign-in method</strong> → enable <strong>Google</strong>.</li>
+          <li>Add <code>dacowboyfitness.com</code> (and <code>localhost</code>) under <strong>Authorized domains</strong>.</li>
+          <li>Create a <strong>Firestore</strong> database (production mode).</li>
+          <li><code>npm i firebase</code>, then add the client config (this config is <strong>public</strong> — safe in the browser):</li>
+        </ol>
+        <pre><code>// src/lib/firebase.ts
+import { initializeApp } from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
+
+const app = initializeApp({
+  apiKey: 'AIza…',                       // public config, from console
+  authDomain: 'dacowboy.firebaseapp.com',
+  projectId: 'dacowboy',
+  appId: '1:…:web:…',
+});
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+export const googleProvider = new GoogleAuthProvider();</code></pre>
+      </section>
+
+      <section id="s2">
+        <h2><span class="stepnum">2</span>Sign in with Google (Vue)</h2>
+        <pre><code>// src/composables/useAuth.ts
+import { ref } from 'vue';
+import { signInWithPopup, signOut, onAuthStateChanged, type User } from 'firebase/auth';
+import { auth, googleProvider } from '../lib/firebase';
+
+const user = ref&lt;User | null&gt;(null);
+onAuthStateChanged(auth, (u) =&gt; (user.value = u));
+
+export function useAuth() {
+  const signIn = () =&gt; signInWithPopup(auth, googleProvider);
+  const logout = () =&gt; signOut(auth);
+  const idToken = () =&gt; auth.currentUser?.getIdToken();   // JWT to send to your functions
+  return { user, signIn, logout, idToken };
+}</code></pre>
+        <p>Add a sign-in button to <code>AppHeader.vue</code> (next to <code>ThemeToggle</code>):</p>
+        <pre><code>&lt;script setup lang="ts"&gt;
+import { useAuth } from '../../composables/useAuth';
+const { user, signIn, logout } = useAuth();
+&lt;/script&gt;
+&lt;template&gt;
+  &lt;button v-if="!user" @click="signIn"&gt;Sign in&lt;/button&gt;
+  &lt;button v-else @click="logout"&gt;{{ user.displayName }} · Sign out&lt;/button&gt;
+&lt;/template&gt;</code></pre>
+      </section>
+
+      <section id="s3">
+        <h2><span class="stepnum">3</span>Razorpay order (test mode)</h2>
+        <p>In the Razorpay dashboard switch to <strong>Test Mode</strong> and copy the test keys (<code>rzp_test_…</code> + secret). Include Checkout in <code>index.html</code>:</p>
+        <pre><code>&lt;script src="https://checkout.razorpay.com/v1/checkout.js"&gt;&lt;/script&gt;</code></pre>
+
+        <h4>Function 1 — createOrder (server-authoritative amount)</h4>
+        <pre><code>// functions/src/createOrder.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import { initializeApp } from 'firebase-admin/app';
+import { getAuth } from 'firebase-admin/auth';
+import Razorpay from 'razorpay';
+initializeApp();
+const rzp = new Razorpay({ key_id: process.env.RZP_KEY_ID!, key_secret: process.env.RZP_KEY_SECRET! });
+
+// price lives on the SERVER — never trust an amount from the browser
+const PRICE: Record&lt;string, { amount: number; currency: string }&gt; = {
+  'cowboy-way': { amount: 49900, currency: 'INR' },   // 499.00 INR, in paise
+};
+
+export const createOrder = onRequest({ cors: true }, async (req, res) =&gt; {
+  const decoded = await getAuth().verifyIdToken(bearer(req));   // trust boundary #1
+  const { courseId } = req.body;
+  const price = PRICE[courseId];
+  if (!price) { res.status(400).json({ error: 'unknown_course' }); return; }
+  const order = await rzp.orders.create({
+    amount: price.amount, currency: price.currency,
+    receipt: `${decoded.uid}:${courseId}`,
+    notes: { uid: decoded.uid, courseId },              // carried into the webhook
+  });
+  res.json({ orderId: order.id, keyId: process.env.RZP_KEY_ID, amount: order.amount, currency: order.currency });
+});
+
+function bearer(req: any): string {
+  const h = String(req.headers.authorization ?? '');
+  if (!h.startsWith('Bearer ')) throw new Error('missing token');
+  return h.slice(7);
+}</code></pre>
+
+        <h4>Open Checkout from Vue</h4>
+        <pre><code>async function buy(courseId: string) {
+  const token = await idToken();
+  const order = await fetch('/api/createOrder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ courseId }),
+  }).then((r) =&gt; r.json());
+
+  const rzp = new (window as any).Razorpay({
+    key: order.keyId, order_id: order.orderId, amount: order.amount, currency: order.currency,
+    name: 'DaCowboy Fitness', description: 'Course access',
+    prefill: { email: user.value?.email ?? '' },
+    theme: { color: '#141313' },
+    handler: () =&gt; { /* optimistic; the webhook is the real unlock */ },
+  });
+  rzp.open();
+}</code></pre>
+        <div class="note warn">The browser handler is only for UX. <strong>Never grant access from the client callback</strong> — a user can close the popup after paying, or fake the callback. The webhook (next step) is the source of truth.</div>
+      </section>
+
+      <section id="s4">
+        <h2><span class="stepnum">4</span>Webhook → write the unlock</h2>
+        <p>In Razorpay (Test Mode) → <strong>Settings → Webhooks</strong>: add your function URL, subscribe to <code>payment.captured</code>, and set a <strong>webhook secret</strong>.</p>
+        <pre><code>// functions/src/razorpayWebhook.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import { getFirestore } from 'firebase-admin/firestore';
+import { createHmac } from 'node:crypto';
+
+export const razorpayWebhook = onRequest(async (req, res) =&gt; {
+  // trust boundary #2: verify the signature over the RAW body
+  const signature = String(req.headers['x-razorpay-signature'] ?? '');
+  const expected = createHmac('sha256', process.env.RZP_WEBHOOK_SECRET!)
+    .update(req.rawBody)          // Firebase gives you the raw bytes
+    .digest('hex');
+  if (signature !== expected) { res.status(400).send('bad signature'); return; }
+
+  const event = req.body;
+  if (event.event === 'payment.captured') {
+    const entity = event.payload.payment.entity;
+    const { uid, courseId } = entity.notes ?? {};
+    if (uid &amp;&amp; courseId) {
+      await getFirestore().doc(`entitlements/${uid}/courses/${courseId}`).set(
+        { paid: true, orderId: entity.order_id, purchasedAt: Date.now() },
+        { merge: true },
+      );
+    }
+  }
+  res.json({ ok: true });
+});</code></pre>
+        <div class="note good">This is the moment the course is “unlocked.” It writes exactly one Firestore document per purchase.</div>
+      </section>
+
+      <section id="s5">
+        <h2><span class="stepnum">5</span>Curriq student token (gated by entitlement)</h2>
+        <p>Reuses the token endpoint from the Curriq guide, now backed by the Firestore entitlement instead of a stub.</p>
+        <p class="note">This is <strong>Model A</strong> (per-student SSO token). For a simpler path that skips the SSO shared key entirely, see <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#modelb">Model B</a> below — it replaces this step and the browser reads in Step 6.</p>
+        <pre><code>// functions/src/courseToken.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+import { mintIdpToken } from '@curriq/client/server';
+import { CurriqClient } from '@curriq/client';
+
+const TENANT = 'dacowboy';
+const ISSUER = 'https://dacowboyfitness.com';           // must match the tenant's SsoConfig.issuer
+const curriq = new CurriqClient(process.env.CURRIQ_API!);
+
+export const courseToken = onRequest({ cors: true }, async (req, res) =&gt; {
+  const decoded = await getAuth().verifyIdToken(bearer(req));      // who is this?
+  const { courseId } = req.body;
+
+  const ent = await getFirestore().doc(`entitlements/${decoded.uid}/courses/${courseId}`).get();
+  if (!ent.exists || ent.data()?.paid !== true) { res.status(403).json({ error: 'not_entitled' }); return; }
+
+  const idpToken = await mintIdpToken({
+    sharedKey: process.env.CURRIQ_SSO_SHARED_KEY!,      // from provision-sso (server-only)
+    subject: decoded.uid, issuer: ISSUER, audience: 'curriq', email: decoded.email,
+  });
+  const { studentToken, expiresIn } = await curriq.exchangeSsoToken(TENANT, idpToken);
+  res.json({ studentToken, expiresIn });
+});</code></pre>
+      </section>
+
+      <section id="s6">
+        <h2><span class="stepnum">6</span>Play the course</h2>
+        <p>The player from the Curriq guide works unchanged — just point its token fetch at <code>/api/courseToken</code> with the Firebase ID token and the course id:</p>
+        <pre><code>// inside CoursePlayer.vue onMounted(), replacing the stub fetch
+const token = await idToken();                          // from useAuth()
+const res = await fetch('/api/courseToken', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+  body: JSON.stringify({ courseId: props.courseId }),
+});
+if (res.status === 403) { showBuyButton.value = true; return; }   // not paid → show “Buy”
+const { studentToken } = await res.json();
+// …then getCourseOutline + getVideoPlayback + &lt;mux-player&gt; exactly as before</code></pre>
+        <p>Wire the paid <code>CourseCard</code>'s “Begin Study” to open this player (a modal, or add <code>vue-router</code> and a <code>/course/:id</code> route). Show “Buy” when <code>403</code>, “Sign in” when logged out.</p>
+      </section>
+
+      <section id="modelb">
+        <h2>Model B variant — read key (skip SSO) <span class="tag done">chosen for this build</span></h2>
+        <div class="note good"><strong>Decision:</strong> for this beta — one paid course, identity already in Firebase — <strong>Model B is the path we build on</strong>: simpler, no SSO shared key, and the browser never holds a Curriq token. Model A (Steps 5–6 above) stays for reference, or for later if you want per-student identity inside Curriq.</div>
+        <p>Steps 5–6 use <strong>Model A</strong> (a per-student SSO token). <strong>Model B</strong> is simpler: your function holds a Curriq <strong>read key</strong> and reads Curriq directly after the Firestore entitlement check — no <code>mintIdpToken</code>, no <code>exchangeSsoToken</code>, and <strong>no SSO shared-key setup</strong> (you can skip Curriq Work Package G). The browser receives only the short-lived Mux token.</p>
+        <div class="note">Trade-off: Curriq won't know <em>which</em> student watched (the read key is tenant-level). You already track the user in Firebase/Firestore, so for this beta that's usually fine. Choose Model A only if you want per-student identity inside Curriq (future progress/analytics).</div>
+        <h4>Get a read key</h4>
+        <p>Curriq dashboard → API tokens → create a <strong>read</strong> key (<code>sk_live_…</code>). Store it as <code>CURRIQ_READ_KEY</code> in your function's secrets — never in the browser.</p>
+        <h4>One function replaces Step 5 + the browser reads of Step 6</h4>
+        <pre><code>// functions/src/course.ts
+import { onRequest } from 'firebase-functions/v2/https';
+import { getAuth } from 'firebase-admin/auth';
+import { getFirestore } from 'firebase-admin/firestore';
+import { CurriqClient } from '@curriq/client';
+const curriq = new CurriqClient(process.env.CURRIQ_API!, process.env.CURRIQ_READ_KEY!);   // read key
+
+export const course = onRequest({ cors: true }, async (req, res) =&gt; {
+  const decoded = await getAuth().verifyIdToken(bearer(req));              // who
+  const { courseId } = req.body;
+
+  const ent = await getFirestore().doc(`entitlements/${decoded.uid}/courses/${courseId}`).get();
+  if (!ent.exists || ent.data()?.paid !== true) { res.status(403).json({ error: 'not_entitled' }); return; }
+
+  const outline = await curriq.getCourseOutline(courseId);                // one nested call
+  const lessons: { title: string; playbackId: string; token: string }[] = [];
+  for (const m of outline.modules)
+    for (const l of m.lessons)
+      for (const b of l.blocks)
+        if (b.blockType === 'asset' &amp;&amp; b.data.presentation === 'video') {
+          const pb = await curriq.getVideoPlayback(b.data.assetId);       // Curriq-signed Mux token
+          lessons.push({ title: l.title, playbackId: pb.playbackId, token: pb.token });
+        }
+  res.json({ lessons });                                                  // browser gets only Mux tokens
+});</code></pre>
+        <h4>The player becomes a plain fetch</h4>
+        <pre><code>// CoursePlayer.vue — no @curriq/client in the browser
+const res = await fetch('/api/course', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${await idToken()}` },
+  body: JSON.stringify({ courseId: props.courseId }),
+});
+if (res.status === 403) { showBuy.value = true; return; }
+const { lessons } = await res.json();
+// v-for lessons -&gt; &lt;mux-player :playback-id="l.playbackId" :playback-token="l.token" stream-type="on-demand" /&gt;</code></pre>
+        <div class="note good"><strong>Best fit for “authorized right now or no play”:</strong> every open re-verifies Firebase auth + the Firestore entitlement, and the Mux token returned is short-lived and edge-enforced. Nothing durable lands in the browser.</div>
+        <div class="note warn"><strong>Guard <code>CURRIQ_READ_KEY</code></strong> as a server secret — it can fetch playback for the whole tenant (one course here). Rotate from the dashboard if it leaks. This replaces the SSO shared key from Model A, not adds to it.</div>
+      </section>
+
+      <section id="isolation">
+        <h2>How students stay isolated &amp; expiry is enforced</h2>
+        <h4>Two students, one course</h4>
+        <p>Every request is keyed to the <strong>uid inside the verified Firebase ID token</strong>, and your function always reads <code>entitlements/{that uid}/courses/{courseId}</code>. Access follows a verified identity, not anything the browser can set:</p>
+        <ul>
+          <li><strong>Bob can't pose as Alice</strong> — the ID token is signed by Google; <code>verifyIdToken</code> rejects a forged one.</li>
+          <li><strong>Alice's purchase doesn't help Bob</strong> — if <code>entitlements/bob_uid/…</code> is missing, the function returns 403; Alice's doc is never read for Bob.</li>
+          <li><strong>Bob can't self-grant</strong> — Firestore rules let a user only <em>read</em> their own entitlement and let <strong>no</strong> client write it; only your backend (from the signature-verified webhook) writes it.</li>
+          <li><strong>Bob can't skip the gate</strong> — the read key is server-only, so the browser can't call Curriq directly; the one door is <code>/api/course</code>, which checks his uid.</li>
+          <li><strong>Multiple courses later</strong> — the entitlement is per <code>courseId</code>, so buying course X and asking for Y just 403s.</li>
+        </ul>
+        <h4>Come back 10 days later, auth expired → no play</h4>
+        <p>Two short-lived tokens, neither durable, both re-issued only through your gate:</p>
+        <ol>
+          <li>The <strong>Mux playback token</strong> is short-TTL (<code>max(MUX_PLAYBACK_TTL_SECONDS ≈ 900s, videoLength + 300)</code>) and enforced at Mux's edge — one from 10 days ago is long dead.</li>
+          <li>Getting a fresh one needs a fresh <code>/api/course</code> call → re-verify the Firebase token + re-check the entitlement. Stale login or lapsed access → 403 → no token → no video.</li>
+        </ol>
+        <p class="note">For time-limited access (a “30-day pass”), add <code>expiresAt</code> to the entitlement doc and reject when <code>now &gt; expiresAt</code> before issuing. Nothing else changes.</p>
+      </section>
+
+      <section id="security">
+        <h2>Security checklist <span class="tag sec">do not skip</span></h2>
+        <table>
+          <thead><tr><th>Rule</th><th>Why</th></tr></thead>
+          <tbody>
+            <tr><td>Verify the Firebase ID token server-side (<code>verifyIdToken</code>) on every function</td><td>The browser could send any <code>uid</code>. Only a verified token proves identity.</td></tr>
+            <tr><td>Verify the Razorpay webhook signature over <code>req.rawBody</code></td><td>Anyone can POST to your webhook URL. The signature proves it's really Razorpay.</td></tr>
+            <tr><td>Grant entitlement <strong>only</strong> from the webhook, never the client handler</td><td>The client callback is skippable and spoofable.</td></tr>
+            <tr><td>Set the price on the server (<code>PRICE</code> map)</td><td>Never trust an amount sent by the browser.</td></tr>
+            <tr><td>Keep secrets server-only: <code>RZP_KEY_SECRET</code>, <code>RZP_WEBHOOK_SECRET</code>, <code>CURRIQ_SSO_SHARED_KEY</code>, Curriq write key</td><td>The browser only ever holds the Firebase config (public) and a short-lived <code>studentToken</code>.</td></tr>
+            <tr><td>Lock Firestore <code>entitlements</code> to backend-only writes (rules below)</td><td>A signed-in user must not be able to write their own “paid: true”.</td></tr>
+            <tr><td>Use <code>rzp_test_</code> keys + test webhook secret until you go live</td><td>Sandbox first; swap to live keys only when verified.</td></tr>
+            <tr><td>On the Curriq server, keep <code>MUX_SIGNING_KEY_PRIVATE</code> in the environment only</td><td>Curriq signs the Mux playback token with it (RS256, server-side) and never exposes it — the browser gets only the short-lived signed token. Don't commit it or bundle it (ledger F13).</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules">
+        <h2>Firestore security rules</h2>
+        <pre><code>rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // A user may read only their own profile / entitlements.
+    match /users/{uid} {
+      allow read: if request.auth != null &amp;&amp; request.auth.uid == uid;
+      allow write: if false;                 // backend (Admin SDK) only
+    }
+    match /entitlements/{uid}/courses/{courseId} {
+      allow read: if request.auth != null &amp;&amp; request.auth.uid == uid;
+      allow write: if false;                 // ONLY your functions grant access
+    }
+  }
+}</code></pre>
+        <p class="note">The Admin SDK in your functions bypasses these rules, so your webhook can still write. <code>allow write: if false</code> blocks the browser from self-granting.</p>
+      </section>
+
+      <section id="test">
+        <h2>Test plan (Razorpay sandbox)</h2>
+        <ol>
+          <li><strong>Keys:</strong> use <code>rzp_test_…</code> in <code>createOrder</code>; set the test webhook secret.</li>
+          <li><strong>Test card:</strong> <code>4111 1111 1111 1111</code>, any future expiry, any CVV, any name. (Razorpay's test-mode success card.)</li>
+          <li><strong>Before paying:</strong> open the course → <code>courseToken</code> returns <code>403 not_entitled</code> → player shows “Buy”. ✔ gate works.</li>
+          <li><strong>Pay:</strong> click Buy → Checkout → pay with the test card.</li>
+          <li><strong>Webhook:</strong> confirm the function ran and wrote <code>entitlements/{uid}/courses/cowboy-way</code> (Firestore console). If it didn't fire, check the webhook URL + secret and that you subscribed to <code>payment.captured</code>.</li>
+          <li><strong>After paying:</strong> reopen the course → <code>courseToken</code> returns <code>200</code> + <code>studentToken</code> → the 5 videos play. ✔ unlock works.</li>
+          <li><strong>Signature negative test:</strong> POST a fake body to the webhook → expect <code>400 bad signature</code>.</li>
+        </ol>
+        <div class="note">For a first internal check you can skip Razorpay entirely: write the entitlement doc by hand in the Firestore console for your own <code>uid</code>, then verify the player unlocks. That isolates the Curriq path from the payment path.</div>
+      </section>
+
+      <section id="cost">
+        <h2>Cost summary</h2>
+        <table>
+          <thead><tr><th>Service</th><th>Beta cost</th></tr></thead>
+          <tbody>
+            <tr><td>Firebase Auth + Firestore + Hosting (Spark)</td><td class="done">$0 — well within free quotas</td></tr>
+            <tr><td>Cloud Functions (Blaze free grant)</td><td class="done">≈ $0 at beta volume — needs a card on file</td></tr>
+            <tr><td>Razorpay test mode</td><td class="done">$0 — no real charges</td></tr>
+            <tr><td>Curriq FREE tier</td><td class="done">$0 — 1 course · 5 videos · 50 students</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Only real caveat: the functions tier. If you won't add a card, host the three functions on Cloudflare Workers' free plan (see <a href="http://192.168.1.10:8000/dacowboyfitness/ai-docs/guides/09Aug26-14h52m-auth-payment-course-unlock.html#free">Free-tier reality</a>) and keep the rest on Firebase.</p>
+        <p class="sub">Companion docs: Curriq integration (<code>docs/ai-docs/guides/…-curriq-integration-guide.html</code>) and readiness (<code>docs/ai-docs/analysis/…-verification-ledger.html</code> §18). Iterating from v0.1 — payment provider and hosting choices can change without touching the Curriq path.</p>
+      </section>
+    </main>
+  </div>
+
+  <script type="module">
+    import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+    mermaid.initialize({
+      startOnLoad: true, securityLevel: "strict", theme: "base",
+      themeVariables: {
+        darkMode: true, background: "#0a0a0c", primaryColor: "#131318", primaryTextColor: "#e6e6ea",
+        primaryBorderColor: "#3de6ff", lineColor: "#8b8b96", secondaryColor: "#1a1a22", tertiaryColor: "#131318",
+        clusterBkg: "#111116", clusterBorder: "#26262e", titleColor: "#e6e6ea",
+        edgeLabelBackground: "#0a0a0c", textColor: "#e6e6ea", fontSize: "14px"
+      }
+    });
+  </script>
+
+
+</body></html>
