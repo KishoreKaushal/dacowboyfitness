@@ -8,12 +8,14 @@ import { useCheckout } from '../composables/useCheckout'
 const route = useRoute()
 const router = useRouter()
 
-const { getCourseById, toggleLessonCompletion } = useCourseAccess()
+const { getCourseById, isCourseUnlocked, toggleLessonCompletion } = useCourseAccess()
 const { isAuthenticated, openAuthModal } = useAuth()
 const { openCheckout } = useCheckout()
 
 const courseId = computed(() => (route.params.id as string) || '1')
 const course = computed(() => getCourseById(courseId.value) || getCourseById('1')!)
+
+const isUnlocked = computed(() => isCourseUnlocked(course.value?.id || ''))
 
 const activeLessonId = ref<string>('')
 
@@ -65,8 +67,8 @@ function handleToggleComplete() {
       <span style="color: var(--color-on-surface)">{{ course.title }}</span>
     </div>
 
-    <!-- LOCKED STATE (User does not own course) -->
-    <div v-if="!course.isOwned" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+    <!-- LOCKED STATE (User does not own course or is not signed in) -->
+    <div v-if="!isUnlocked" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
       <!-- Left Column: Course Specs & Curriculum -->
       <div class="lg:col-span-8 space-y-12">
         <header class="space-y-4 border-b pb-8" style="border-color: var(--border-subtle)">
@@ -196,7 +198,7 @@ function handleToggleComplete() {
       </div>
     </div>
 
-    <!-- UNLOCKED / PLAYER STATE (User owns course) -->
+    <!-- UNLOCKED / PLAYER STATE (User is signed in and owns course) -->
     <div v-else class="grid grid-cols-1 lg:grid-cols-12 gap-8">
       <!-- Left Column: Video Player & Lesson Notes (Span 8) -->
       <div class="lg:col-span-8 space-y-6">

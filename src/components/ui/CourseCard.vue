@@ -2,12 +2,16 @@
 import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import type { Course } from '../../data/content'
+import { useCourseAccess } from '../../composables/useCourseAccess'
 
 const props = defineProps<{
   course: Course
 }>()
 
 const router = useRouter()
+const { isCourseUnlocked } = useCourseAccess()
+
+const isOwned = computed(() => isCourseUnlocked(props.course.id))
 
 const progressPercent = computed(() => {
   if (!props.course.lessonsCount || props.course.completedLessonsCount === undefined) return 0
@@ -36,7 +40,7 @@ function navigateToCourse() {
       <!-- Optional status chip (Top-Left) -->
       <div class="absolute top-3 left-3 z-10">
         <span
-          v-if="course.isOwned"
+          v-if="isOwned"
           class="font-mono text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 rounded-md backdrop-blur-md border shadow-sm"
           style="background: var(--glass-bg-start); color: var(--color-on-surface); border-color: var(--border-medium)"
         >
@@ -53,7 +57,7 @@ function navigateToCourse() {
 
       <!-- Optional Progress bar (Bottom of image) -->
       <div
-        v-if="course.isOwned && course.completedLessonsCount !== undefined"
+        v-if="isOwned && course.completedLessonsCount !== undefined"
         class="absolute bottom-0 left-0 right-0 h-1 z-10"
         style="background: var(--border-light)"
       >
@@ -80,13 +84,13 @@ function navigateToCourse() {
       <div class="pt-2 flex items-center justify-between">
         <div class="flex items-center gap-2 course-cta">
           <span class="font-mono text-xs tracking-widest uppercase font-semibold">
-            {{ course.isOwned ? 'CONTINUE STUDY' : 'BEGIN STUDY' }}
+            {{ isOwned ? 'CONTINUE STUDY' : 'BEGIN STUDY' }}
           </span>
           <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </div>
 
         <span
-          v-if="course.isOwned && course.completedLessonsCount !== undefined"
+          v-if="isOwned && course.completedLessonsCount !== undefined"
           class="font-mono text-[11px] text-muted"
         >
           {{ progressPercent }}%

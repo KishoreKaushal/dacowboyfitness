@@ -1,18 +1,29 @@
 import { ref, computed } from 'vue'
 import { courses as initialCourses, type Course } from '../data/content'
 import { useToast } from './useToast'
+import { useAuth } from './useAuth'
 
 const coursesList = ref<Course[]>(JSON.parse(JSON.stringify(initialCourses)))
 
 export function useCourseAccess() {
   const { showToast } = useToast()
+  const { isAuthenticated } = useAuth()
 
   const allCourses = computed(() => coursesList.value)
 
-  const ownedCourses = computed(() => coursesList.value.filter(c => c.isOwned))
+  const ownedCourses = computed(() => {
+    if (!isAuthenticated.value) return []
+    return coursesList.value.filter(c => c.isOwned)
+  })
 
   function getCourseById(id: string): Course | undefined {
     return coursesList.value.find(c => c.id === id || c.slug === id)
+  }
+
+  function isCourseUnlocked(courseIdOrSlug: string): boolean {
+    if (!isAuthenticated.value) return false
+    const course = getCourseById(courseIdOrSlug)
+    return !!course?.isOwned
   }
 
   function unlockCourse(courseId: string) {
@@ -41,6 +52,7 @@ export function useCourseAccess() {
     allCourses,
     ownedCourses,
     getCourseById,
+    isCourseUnlocked,
     unlockCourse,
     toggleLessonCompletion,
   }
