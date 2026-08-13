@@ -8,6 +8,8 @@ import CoursesSection from './components/sections/CoursesSection.vue'
 import JournalSection from './components/sections/JournalSection.vue'
 import AboutSection from './components/sections/AboutSection.vue'
 import CtaSection from './components/sections/CtaSection.vue'
+import GoogleSignInModal from './components/ui/GoogleSignInModal.vue'
+import ProfileDrawer from './components/ui/ProfileDrawer.vue'
 
 // Initialize theme
 useTheme()
@@ -25,4 +27,8 @@ useTheme()
     <CtaSection />
   </main>
   <AppFooter />
+
+  <!-- Auth Modals & Drawers -->
+  <GoogleSignInModal />
+  <ProfileDrawer />
 </template>
