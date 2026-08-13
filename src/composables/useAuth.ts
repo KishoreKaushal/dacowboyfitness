@@ -125,7 +125,8 @@ export function useAuth() {
           authError.value = redirectErr.message || 'Popup was blocked and redirect failed.'
         }
       } else if (err.code === 'auth/unauthorized-domain') {
-        authError.value = 'Domain not authorized in Firebase Console. Please add localhost to Authorized Domains.'
+        const domain = typeof window !== 'undefined' ? window.location.hostname : 'this domain'
+        authError.value = `Domain (${domain}) is not authorized in Firebase Console. Please add ${domain} to Authorized Domains in Firebase Console.`
       } else if (err.code === 'auth/configuration-not-found') {
         authError.value = 'Google Sign-In is not enabled in Firebase Console. Please enable Google provider under Authentication -> Sign-in method.'
       } else {
