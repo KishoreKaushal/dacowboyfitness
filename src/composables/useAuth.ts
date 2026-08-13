@@ -1,7 +1,7 @@
 import { ref, computed } from 'vue'
 import {
   onAuthStateChanged,
-  signInWithRedirect,
+  signInWithPopup,
   getRedirectResult,
   signOut as firebaseSignOut,
   type User
@@ -110,18 +110,26 @@ export function useAuth() {
     authError.value = null
 
     try {
-      await signInWithRedirect(auth, googleProvider)
+      const result = await signInWithPopup(auth, googleProvider)
+      if (result?.user) {
+        currentUser.value = result.user
+        isAuthSigningIn.value = false
+        isAuthModalOpen.value = false
+        syncUserProfile(result.user)
+      }
     } catch (err: any) {
-      console.error('Sign-in redirect error:', err)
+      console.error('Sign-in error:', err)
       isAuthSigningIn.value = false
 
-      if (err.code === 'auth/unauthorized-domain') {
+      if (err.code === 'auth/popup-closed-by-user') {
+        authError.value = 'Sign-in window was closed. Please try again.'
+      } else if (err.code === 'auth/unauthorized-domain') {
         const domain = typeof window !== 'undefined' ? window.location.hostname : 'this domain'
         authError.value = `Domain (${domain}) is not authorized in Firebase Console. Please add ${domain} to Authorized Domains in Firebase Console.`
       } else if (err.code === 'auth/configuration-not-found') {
         authError.value = 'Google Sign-In is not enabled in Firebase Console. Please enable Google provider under Authentication -> Sign-in method.'
       } else {
-        authError.value = err.message || 'Failed to initiate redirect sign-in. Please try again.'
+        authError.value = err.message || 'Failed to sign in with Google. Please try again.'
       }
     }
   }
