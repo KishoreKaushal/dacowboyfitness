@@ -1,5 +1,12 @@
 <script setup lang="ts">
 import { heroContent, siteConfig } from '../../data/content'
+
+function scrollToCourses() {
+  const el = document.querySelector('#courses')
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' })
+  }
+}
 </script>
 
 <template>
@@ -14,7 +21,7 @@ import { heroContent, siteConfig } from '../../data/content'
           {{ heroContent.subtitle }}
         </p>
         <div class="flex flex-col md:flex-row gap-6 justify-center pt-4">
-          <button class="btn-primary btn-active">
+          <button @click="scrollToCourses" class="btn-primary btn-active">
             {{ heroContent.primaryCta }}
           </button>
           <a
@@ -28,7 +35,7 @@ import { heroContent, siteConfig } from '../../data/content'
         </div>
       </div>
     </div>
-    <div class="scroll-indicator">
+    <div class="scroll-indicator cursor-pointer" @click="scrollToCourses">
       <span class="material-symbols-outlined">expand_more</span>
     </div>
   </section>
