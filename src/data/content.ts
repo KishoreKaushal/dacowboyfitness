@@ -52,7 +52,7 @@ export interface Course {
   lessons: Lesson[]
 }
 
-const SAMPLE_YOUTUBE_EMBED = 'https://www.youtube-nocookie.com/embed/iLFORQA0h8k'
+const SAMPLE_YOUTUBE_EMBED = 'https://www.youtube-nocookie.com/embed/yqWX86uT5jM'
 
 export const courses: Course[] = [
   {
