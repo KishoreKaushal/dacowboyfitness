@@ -38,6 +38,10 @@ const links = [
 
 function navigate(link: typeof links[0]) {
   if (link.route === '/library') {
+    if (!isAuthenticated.value) {
+      openAuthModal()
+      return
+    }
     router.push('/library')
   } else {
     if (route.path !== '/') {
