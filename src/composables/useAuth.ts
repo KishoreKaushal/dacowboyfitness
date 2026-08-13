@@ -76,6 +76,7 @@ export function useAuth() {
   const isAuthenticated = computed(() => !!currentUser.value)
 
   const openAuthModal = () => {
+    if (currentUser.value) return
     authError.value = null
     isAuthModalOpen.value = true
   }
@@ -100,6 +101,12 @@ export function useAuth() {
   }
 
   async function signInWithGoogle() {
+    if (currentUser.value) {
+      isAuthSigningIn.value = false
+      isAuthModalOpen.value = false
+      return
+    }
+
     isAuthSigningIn.value = true
     authError.value = null
 
