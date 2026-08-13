@@ -2,14 +2,10 @@
 import { useTheme } from './composables/useTheme'
 import AppHeader from './components/layout/AppHeader.vue'
 import AppFooter from './components/layout/AppFooter.vue'
-import HeroSection from './components/sections/HeroSection.vue'
-import CowboyWaySection from './components/sections/CowboyWaySection.vue'
-import CoursesSection from './components/sections/CoursesSection.vue'
-import JournalSection from './components/sections/JournalSection.vue'
-import AboutSection from './components/sections/AboutSection.vue'
-import CtaSection from './components/sections/CtaSection.vue'
 import GoogleSignInModal from './components/ui/GoogleSignInModal.vue'
 import ProfileDrawer from './components/ui/ProfileDrawer.vue'
+import UnlockSheet from './components/ui/UnlockSheet.vue'
+import Toast from './components/ui/Toast.vue'
 
 // Initialize theme
 useTheme()
@@ -18,17 +14,14 @@ useTheme()
 <template>
   <div class="noise-overlay"></div>
   <AppHeader />
-  <main class="pt-24 overflow-hidden">
-    <HeroSection />
-    <CowboyWaySection />
-    <CoursesSection />
-    <JournalSection />
-    <AboutSection />
-    <CtaSection />
+  <main class="overflow-hidden min-h-screen">
+    <router-view />
   </main>
   <AppFooter />
 
-  <!-- Auth Modals & Drawers -->
+  <!-- Global Modals, Drawers & Overlays -->
   <GoogleSignInModal />
   <ProfileDrawer />
+  <UnlockSheet />
+  <Toast />
 </template>

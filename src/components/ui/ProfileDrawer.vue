@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useAuth } from '../../composables/useAuth'
+import { useCourseAccess } from '../../composables/useCourseAccess'
+
+const router = useRouter()
+const { ownedCourses } = useCourseAccess()
 
 const {
   currentUser,
@@ -21,6 +26,11 @@ const userInitials = computed(() => {
   }
   return name.slice(0, 2).toUpperCase()
 })
+
+function goToLibrary() {
+  closeProfileDrawer()
+  router.push('/library')
+}
 
 function handleKeydown(e: KeyboardEvent) {
   if (e.key === 'Escape' && isProfileDrawerOpen.value) {
@@ -92,12 +102,12 @@ onUnmounted(() => {
 
         <!-- Navigation List -->
         <nav class="drawer-nav">
-          <button class="nav-item group" @click="closeProfileDrawer">
+          <button class="nav-item group" @click="goToLibrary">
             <div class="nav-item-left">
               <span class="material-symbols-outlined icon-20">book</span>
               <span class="font-body-md nav-label">My Library</span>
             </div>
-            <span class="nav-badge font-label-sm">0</span>
+            <span class="nav-badge font-label-sm">{{ ownedCourses.length }}</span>
           </button>
 
           <button class="nav-item group" @click="closeProfileDrawer">

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import CowboyLogo from '../icons/CowboyLogo.vue'
 import ThemeToggle from '../ui/ThemeToggle.vue'
-import { navLinks } from '../../data/content'
 import { useAuth } from '../../composables/useAuth'
+
+const router = useRouter()
+const route = useRoute()
 
 const {
   currentUser,
@@ -25,36 +28,53 @@ const userInitials = computed(() => {
   return name.slice(0, 2).toUpperCase()
 })
 
-function scrollTo(href: string) {
-  if (href === '#') return
-  const el = document.querySelector(href)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' })
+const links = [
+  { label: 'Courses', href: '#courses', route: '/' },
+  { label: 'The Cowboy Way', href: '#cowboy-way', route: '/' },
+  { label: 'Journal', href: '#journal', route: '/' },
+  { label: 'About', href: '#about', route: '/' },
+  { label: 'My Library', href: '/library', route: '/library' },
+]
+
+function navigate(link: typeof links[0]) {
+  if (link.route === '/library') {
+    router.push('/library')
+  } else {
+    if (route.path !== '/') {
+      router.push({ path: '/', hash: link.href })
+    } else {
+      const el = document.querySelector(link.href)
+      if (el) el.scrollIntoView({ behavior: 'smooth' })
+    }
   }
+}
+
+function goHome() {
+  router.push('/')
 }
 </script>
 
 <template>
   <header class="header">
     <nav class="nav-inner">
-      <div class="brand">
+      <div class="brand cursor-pointer" @click="goHome">
         <div class="logo-wrap">
           <CowboyLogo />
         </div>
-        <span class="font-display-lg">DaCowboy Fitness</span>
+        <span class="font-serif font-medium">DaCowboy Fitness</span>
       </div>
 
       <div class="flex items-center gap-4 md:gap-8">
-        <div class="hidden md:flex items-center gap-8">
-          <a
-            v-for="link in navLinks"
+        <div class="hidden md:flex items-center gap-6">
+          <button
+            v-for="link in links"
             :key="link.label"
-            :href="link.href"
-            :class="['nav-link', { 'nav-link--active': link.active }]"
-            @click.prevent="scrollTo(link.href)"
+            class="nav-link text-sm font-sans"
+            :class="{ 'nav-link--active': route.path === link.route && link.route === '/library' }"
+            @click="navigate(link)"
           >
             {{ link.label }}
-          </a>
+          </button>
         </div>
 
         <ThemeToggle />
@@ -173,9 +193,10 @@ function scrollTo(href: string) {
 .nav-link {
   color: var(--color-on-surface-variant);
   transition: color 0.3s ease;
-  font-family: 'Inter', system-ui, sans-serif;
-  font-size: 1rem;
-  text-decoration: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
 }
 
 .nav-link:hover {
@@ -185,7 +206,6 @@ function scrollTo(href: string) {
 .nav-link--active {
   color: var(--color-primary);
   border-bottom: 1px solid var(--color-primary);
-  padding-bottom: 4px;
 }
 
 .auth-cluster {
