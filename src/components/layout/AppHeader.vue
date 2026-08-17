@@ -31,7 +31,7 @@ const userInitials = computed(() => {
 const links = [
   { label: 'Courses', href: '#courses', route: '/' },
   { label: 'The Cowboy Way', href: '#cowboy-way', route: '/' },
-  { label: 'Journal', href: '#journal', route: '/' },
+  { label: 'Journal', href: '/journal', route: '/journal' },
   { label: 'About', href: '#about', route: '/' },
   { label: 'My Library', href: '/library', route: '/library' },
 ]
@@ -43,6 +43,8 @@ function navigate(link: typeof links[0]) {
       return
     }
     router.push('/library')
+  } else if (link.route === '/journal') {
+    router.push('/journal')
   } else {
     if (route.path !== '/') {
       router.push({ path: '/', hash: link.href })
