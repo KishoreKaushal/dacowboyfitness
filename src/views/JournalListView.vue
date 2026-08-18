@@ -1,21 +1,34 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { getAllJournals, getAllTags } from '../data/mockJournals'
+import { ref, computed, onMounted } from 'vue'
+import { useJournals } from '../composables/useJournals'
+import type { JournalEntrySummary } from '../types/journal'
 import JournalCard from '../components/journal/JournalCard.vue'
 
-const allJournals = getAllJournals()
-const allTags = getAllTags()
+const { fetchPublishedJournals } = useJournals()
 
+const allJournals = ref<JournalEntrySummary[]>([])
 const activeTag = ref<string | null>(null)
 
+const allTags = computed(() => {
+  const set = new Set<string>()
+  allJournals.value.forEach((j) => {
+    j.tags?.forEach((t) => set.add(t))
+  })
+  return Array.from(set).sort()
+})
+
 const filteredJournals = computed(() => {
-  if (!activeTag.value) return allJournals
-  return allJournals.filter((j) => j.tags.includes(activeTag.value!))
+  if (!activeTag.value) return allJournals.value
+  return allJournals.value.filter((j) => j.tags?.includes(activeTag.value!))
 })
 
 function selectTag(tag: string | null) {
   activeTag.value = tag
 }
+
+onMounted(async () => {
+  allJournals.value = await fetchPublishedJournals()
+})
 </script>
 
 <template>

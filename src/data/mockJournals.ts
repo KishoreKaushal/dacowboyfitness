@@ -2,6 +2,89 @@ import type { JournalEntry, JournalEntrySummary } from '../types/journal'
 
 const MOCK_JOURNALS: JournalEntry[] = [
   {
+    id: 'advanced-biomechanical-waves',
+    slug: 'advanced-biomechanical-waves',
+    title: 'Advanced Biomechanical Waves & Force Vectors',
+    author: 'Kishore Kaushal',
+    date: '2026-08-17',
+    published: true,
+    tags: ['BIOMECHANICS', 'PHYSICS', 'TRAINING'],
+    excerpt: 'Analyzing wave dynamics, rate of force development, and first-principles movement mechanics.',
+    readTimeMinutes: 4,
+    coverImage: {
+      src: 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop',
+      alt: 'Biomechanics and athletic movement',
+      caption: 'FIG 0. High-speed kinematics and ground reaction force vectors.',
+    },
+    blocks: [
+      {
+        id: 'block_1',
+        type: 'markdown',
+        content: `## Wave Dynamics in Biological Tissue
+Musculoskeletal movement is not an instantaneous event; it propagates through kinetic chains as continuous mechanical energy transfers. The propagation of elastic strain energy through tendon structures can be described via the one-dimensional wave equation:
+
+$$\\frac{\\partial^2 u}{\\partial t^2} = v^2 \\frac{\\partial^2 u}{\\partial x^2}$$
+
+Where $v = \\sqrt{\\frac{E}{\\rho}}$ denotes the propagation velocity through muscle-tendon complexes, with $E$ representing Young's modulus and $\\rho$ representing tissue density.`,
+      },
+      {
+        id: 'block_2',
+        type: 'video',
+        provider: 'youtube',
+        src: 'https://youtu.be/8cG0P3cqNw8',
+        caption: 'VID 1. Analysis of rotational dynamics and rate of force development.',
+        aspectRatio: '16/9',
+      },
+      {
+        id: 'block_3',
+        type: 'markdown',
+        content: `### Rate of Force Development (RFD)
+In elite athletic training, absolute peak force is rarely reached within competitive window times (100–300 ms). Therefore, the time derivative of force determines true functional power:
+
+$$\\text{RFD} = \\frac{dF}{dt}$$
+
+When athletes optimize movement efficiency, the neuromuscular rate coding creates steep force-time curves rather than flat plateau distributions.`,
+      },
+      {
+        id: 'block_4',
+        type: 'image',
+        src: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=1200&auto=format&fit=crop',
+        alt: 'Vector kinematics and force curves',
+        caption: 'FIG 2. Ground reaction force vector trajectory during explosive hip extension.',
+      },
+      {
+        id: 'block_5',
+        type: 'markdown',
+        content: `## First Principles Summary
+1. **Kinetic Energy Transfer:** Kinetic energy flows sequentially from proximal core drivers to distal extremities.
+2. **Elastic Storage:** Fascial elasticity acts like non-linear biological springs governed by Hooke's Law with variable stiffness coefficients.
+3. **First Principles Mindset:** Strip away training dogma and evaluate every exercise as pure mechanical work ($W = \\int \\mathbf{F} \\cdot d\\mathbf{r}$).`,
+      },
+    ],
+    relatedJournals: [
+      {
+        id: 'the-architecture-of-resistance',
+        slug: 'the-architecture-of-resistance',
+        title: 'The Architecture of Resistance',
+        excerpt: 'Understanding resistance as raw material for systemic fortification through the lens of structural engineering.',
+        tags: ['BIOMECHANICS', 'THEORY'],
+        readTimeMinutes: 5,
+        date: '2026-08-17',
+        coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCd1etbjA6DIsmDG5uUCu_LYNAkiidZHjh03Su-OvVWAn8Yq3jWWGGG9-VXCg8g6nLMJVThf3wjhZOaIFXXL2ULvQjFFv8Qtdgvv28p84O0FPrlTjOi3ErQt3HfBv4bFNBck-QhTyBR4Zb9p6upYhC57ZGcruYRmG3f4sP7yZN-MEFX7Lc3QzHZXbk3QYzwTXGM-S-pyW_bguIDYZWkAF5LqpYZoK21-vElm--0buDt_H4YJ9gVzCPC',
+      },
+      {
+        id: 'the-friction-interface',
+        slug: 'the-friction-interface',
+        title: 'The Friction Interface',
+        excerpt: 'How the physics of grip strength and shear forces dictate barbell training efficiency.',
+        tags: ['BIOMECHANICS', 'STRENGTH'],
+        readTimeMinutes: 4,
+        date: '2026-09-02',
+        coverImage: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCd1etbjA6DIsmDG5uUCu_LYNAkiidZHjh03Su-OvVWAn8Yq3jWWGGG9-VXCg8g6nLMJVThf3wjhZOaIFXXL2ULvQjFFv8Qtdgvv28p84O0FPrlTjOi3ErQt3HfBv4bFNBck-QhTyBR4Zb9p6upYhC57ZGcruYRmG3f4sP7yZN-MEFX7Lc3QzHZXbk3QYzwTXGM-S-pyW_bguIDYZWkAF5LqpYZoK21-vElm--0buDt_H4YJ9gVzCPC',
+      },
+    ],
+  },
+  {
     id: 'the-architecture-of-resistance',
     slug: 'the-architecture-of-resistance',
     title: 'The Architecture of Resistance',
@@ -269,6 +352,8 @@ const MOCK_JOURNALS: JournalEntry[] = [
     ],
   },
 ]
+
+export const mockJournals: JournalEntry[] = MOCK_JOURNALS
 
 export function getAllJournals(): JournalEntrySummary[] {
   return MOCK_JOURNALS

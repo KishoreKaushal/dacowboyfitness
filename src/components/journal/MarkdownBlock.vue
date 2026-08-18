@@ -1,9 +1,175 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+import MarkdownIt from 'markdown-it'
+// @ts-ignore
+import markdownItKatex from 'markdown-it-katex'
+import 'katex/dist/katex.min.css'
+
+const props = defineProps<{
   content: string
 }>()
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+  breaks: true,
+})
+
+md.use(markdownItKatex, {
+  throwOnError: false,
+  errorColor: '#ffb4ab'
+})
+
+const renderedHtml = computed(() => {
+  if (!props.content) return ''
+  return md.render(props.content)
+})
 </script>
 
 <template>
-  <div class="markdown-content" v-html="content"></div>
+  <div class="markdown-body" v-html="renderedHtml"></div>
 </template>
+
+<style>
+/* Scoped or global styles for rich editorial typography */
+.markdown-body {
+  color: var(--color-on-surface, #e5e2e1);
+  font-family: var(--font-body, 'Inter', system-ui, sans-serif);
+  font-size: 18px;
+  line-height: 1.75;
+  margin: 32px 0;
+  letter-spacing: -0.01em;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  font-family: var(--font-display, 'EB Garamond', Georgia, serif);
+  color: var(--color-primary, #ffffff);
+  font-weight: 500;
+  line-height: 1.2;
+  margin-top: 48px;
+  margin-bottom: 20px;
+}
+
+.markdown-body h1 {
+  font-size: 38px;
+  letter-spacing: -0.02em;
+}
+
+.markdown-body h2 {
+  font-size: 30px;
+  letter-spacing: -0.015em;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border-light, rgba(255, 255, 255, 0.05));
+}
+
+.markdown-body h3 {
+  font-size: 24px;
+}
+
+.markdown-body h4 {
+  font-size: 20px;
+}
+
+.markdown-body p {
+  margin-bottom: 24px;
+  color: var(--color-on-surface, #e5e2e1);
+}
+
+.markdown-body strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.markdown-body em {
+  font-style: italic;
+  color: var(--color-on-surface-variant, #c4c7c8);
+}
+
+.markdown-body ul,
+.markdown-body ol {
+  margin: 20px 0 28px 24px;
+  padding-left: 8px;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+}
+
+.markdown-body li {
+  margin-bottom: 10px;
+  line-height: 1.65;
+}
+
+.markdown-body blockquote {
+  border-left: 2px solid var(--color-primary, #ffffff);
+  padding: 16px 24px;
+  margin: 32px 0;
+  background: var(--color-surface-container, rgba(32, 31, 31, 0.5));
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--color-on-surface-variant, #c4c7c8);
+}
+
+.markdown-body blockquote p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-body code {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.markdown-body pre {
+  background: var(--color-surface-container-lowest, #0e0e0e);
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.1));
+  border-radius: 8px;
+  padding: 20px;
+  overflow-x: auto;
+  margin: 28px 0;
+}
+
+.markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  border: none;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.markdown-body a {
+  color: var(--color-primary, #ffffff);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  transition: opacity 0.2s ease;
+}
+
+.markdown-body a:hover {
+  opacity: 0.8;
+}
+
+/* KaTeX formula enhancements */
+.markdown-body .katex-display {
+  margin: 28px 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 12px 0;
+}
+
+.markdown-body .katex {
+  font-size: 1.1em;
+  color: #ffffff;
+}
+</style>
