@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref, watch, nextTick } from 'vue'
 import MarkdownIt from 'markdown-it'
-// @ts-ignore
-import markdownItKatex from 'markdown-it-katex'
 import 'katex/dist/katex.min.css'
+// @ts-ignore
+import renderMathInElement from 'katex/contrib/auto-render'
 
 const props = defineProps<{
   content: string
 }>()
+
+const containerRef = ref<HTMLElement | null>(null)
 
 const md = new MarkdownIt({
   html: true,
@@ -16,19 +18,30 @@ const md = new MarkdownIt({
   breaks: true,
 })
 
-md.use(markdownItKatex, {
-  throwOnError: false,
-  errorColor: '#ffb4ab'
-})
-
 const renderedHtml = computed(() => {
   if (!props.content) return ''
   return md.render(props.content)
 })
+
+// After Vue updates the DOM with new markdown HTML, run KaTeX auto-render
+watch(renderedHtml, async () => {
+  await nextTick()
+  if (containerRef.value) {
+    renderMathInElement(containerRef.value, {
+      delimiters: [
+        { left: '$$', right: '$$', display: true },
+        { left: '$',  right: '$',  display: false },
+      ],
+      throwOnError: false,
+      errorColor: '#ffb4ab',
+      strict: false,
+    })
+  }
+}, { immediate: true })
 </script>
 
 <template>
-  <div class="markdown-body" v-html="renderedHtml"></div>
+  <div ref="containerRef" class="markdown-body" v-html="renderedHtml"></div>
 </template>
 
 <style>

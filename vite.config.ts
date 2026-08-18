@@ -13,6 +13,9 @@ export default defineConfig({
     }),
     tailwindcss()
   ],
+  optimizeDeps: {
+    include: ['@traptitech/markdown-it-katex']
+  },
   build: {
     chunkSizeWarningLimit: 550,
     rolldownOptions: {
