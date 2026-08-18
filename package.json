@@ -4,12 +4,25 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "dev": "vite --mode staging",
+    "dev:prod": "vite --mode production",
+    "build": "vue-tsc -b && vite build --mode production",
+    "build:staging": "vue-tsc -b && vite build --mode staging",
+    "build:prod": "vue-tsc -b && vite build --mode production",
+    "preview": "vite preview",
+    "deploy:staging": "npm run build:staging && firebase deploy -P staging",
+    "deploy:prod": "npm run build:prod && firebase deploy -P production",
+    "deploy:rules:staging": "firebase deploy -P staging --only firestore:rules",
+    "deploy:rules:prod": "firebase deploy -P production --only firestore:rules"
   },
   "dependencies": {
+    "@types/katex": "^0.16.8",
+    "@types/markdown-it": "^14.1.2",
     "firebase": "^12.17.1",
+    "katex": "^0.18.4",
+    "markdown-it": "^15.0.0",
+    "markdown-it-katex": "^2.0.3",
+    "vidstack": "^0.6.15",
     "vue": "^3.5.39",
     "vue-router": "^4.6.4"
   },
