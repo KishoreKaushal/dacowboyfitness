@@ -20,12 +20,12 @@ const MOCK_JOURNALS: JournalEntry[] = [
       {
         id: 'block_1',
         type: 'markdown',
-        content: `## Wave Dynamics in Biological Tissue
+        content: String.raw`## Wave Dynamics in Biological Tissue
 Musculoskeletal movement is not an instantaneous event; it propagates through kinetic chains as continuous mechanical energy transfers. The propagation of elastic strain energy through tendon structures can be described via the one-dimensional wave equation:
 
-$$\\frac{\\partial^2 u}{\\partial t^2} = v^2 \\frac{\\partial^2 u}{\\partial x^2}$$
+$$\frac{\partial^2 u}{\partial t^2} = v^2 \frac{\partial^2 u}{\partial x^2}$$
 
-Where $v = \\sqrt{\\frac{E}{\\rho}}$ denotes the propagation velocity through muscle-tendon complexes, with $E$ representing Young's modulus and $\\rho$ representing tissue density.`,
+Where $v = \sqrt{\frac{E}{\rho}}$ denotes the propagation velocity through muscle-tendon complexes, with $E$ representing Young's modulus and $\rho$ representing tissue density.`,
       },
       {
         id: 'block_2',
@@ -38,10 +38,10 @@ Where $v = \\sqrt{\\frac{E}{\\rho}}$ denotes the propagation velocity through mu
       {
         id: 'block_3',
         type: 'markdown',
-        content: `### Rate of Force Development (RFD)
+        content: String.raw`### Rate of Force Development (RFD)
 In elite athletic training, absolute peak force is rarely reached within competitive window times (100–300 ms). Therefore, the time derivative of force determines true functional power:
 
-$$\\text{RFD} = \\frac{dF}{dt}$$
+$$\text{RFD} = \frac{dF}{dt}$$
 
 When athletes optimize movement efficiency, the neuromuscular rate coding creates steep force-time curves rather than flat plateau distributions.`,
       },
@@ -55,10 +55,10 @@ When athletes optimize movement efficiency, the neuromuscular rate coding create
       {
         id: 'block_5',
         type: 'markdown',
-        content: `## First Principles Summary
+        content: String.raw`## First Principles Summary
 1. **Kinetic Energy Transfer:** Kinetic energy flows sequentially from proximal core drivers to distal extremities.
 2. **Elastic Storage:** Fascial elasticity acts like non-linear biological springs governed by Hooke's Law with variable stiffness coefficients.
-3. **First Principles Mindset:** Strip away training dogma and evaluate every exercise as pure mechanical work ($W = \\int \\mathbf{F} \\cdot d\\mathbf{r}$).`,
+3. **First Principles Mindset:** Strip away training dogma and evaluate every exercise as pure mechanical work ($W = \int \mathbf{F} \cdot d\mathbf{r}$).`,
       },
     ],
     relatedJournals: [
