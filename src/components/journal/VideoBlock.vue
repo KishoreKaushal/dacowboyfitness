@@ -21,10 +21,11 @@ const youtubeId = computed(() => {
   return match ? match[1] : null
 })
 
-// Use Vidstack provider syntax for YouTube or fallback to direct URL
-const mediaSrc = computed(() => {
+const isYouTube = computed(() => !!youtubeId.value)
+
+const embedUrl = computed(() => {
   if (youtubeId.value) {
-    return `youtube/${youtubeId.value}`
+    return `https://www.youtube-nocookie.com/embed/${youtubeId.value}?rel=0&modestbranding=1`
   }
   return props.block.src
 })
@@ -33,8 +34,21 @@ const mediaSrc = computed(() => {
 <template>
   <div class="video-block">
     <div class="video-container">
+      <!-- YouTube Embed with Obsidian container styling -->
+      <iframe
+        v-if="isYouTube"
+        :src="embedUrl"
+        class="video-iframe"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        loading="lazy"
+        title="Journal Video Player"
+      ></iframe>
+
+      <!-- Direct HTML5 / HLS video stream with Vidstack -->
       <media-player
-        :src="mediaSrc"
+        v-else
+        :src="block.src"
         :aspect-ratio="block.aspectRatio || '16/9'"
         playsinline
         class="media-player-container"
