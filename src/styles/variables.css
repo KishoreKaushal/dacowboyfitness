@@ -26,6 +26,23 @@
   --selection-bg: #ffffff;
   --selection-text: #000000;
   --btn-ghost-hover: rgba(255, 255, 255, 0.05);
+
+  /* Journal-specific tokens */
+  --progress-bar-bg: #ffffff;
+  --math-block-bg: #141313;
+  --math-block-border: rgba(255, 255, 255, 0.1);
+  --math-block-text: #ffffff;
+  --blockquote-border: #ffffff;
+  --blockquote-text: #8E9192;
+  --tag-chip-bg: rgba(255, 255, 255, 0.04);
+  --tag-chip-border: rgba(255, 255, 255, 0.10);
+  --tag-chip-text: #ffffff;
+  --caption-text: #8E9192;
+  --video-overlay-bg: rgba(0, 0, 0, 0.2);
+  --video-controls-bg: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  --article-heading-color: #ffffff;
+  --article-body-color: #c4c7c5;
+  --article-list-bullet: #ffffff;
 }
 
 [data-theme="light"] {
@@ -56,4 +73,21 @@
   --selection-bg: #000000;
   --selection-text: #ffffff;
   --btn-ghost-hover: rgba(0, 0, 0, 0.05);
+
+  /* Journal-specific tokens */
+  --progress-bar-bg: #1A1A1A;
+  --math-block-bg: #F2F1EE;
+  --math-block-border: rgba(0, 0, 0, 0.08);
+  --math-block-text: #1A1A1A;
+  --blockquote-border: #1A1A1A;
+  --blockquote-text: #5E6673;
+  --tag-chip-bg: rgba(0, 0, 0, 0.04);
+  --tag-chip-border: rgba(0, 0, 0, 0.10);
+  --tag-chip-text: #1A1A1A;
+  --caption-text: #5E6673;
+  --video-overlay-bg: rgba(255, 255, 255, 0.1);
+  --video-controls-bg: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+  --article-heading-color: #1A1A1A;
+  --article-body-color: #4A4A4A;
+  --article-list-bullet: #1A1A1A;
 }

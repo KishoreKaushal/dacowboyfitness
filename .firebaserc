@@ -1,5 +1,7 @@
 {
   "projects": {
-    "default": "dacowboyfitness-website"
+    "default": "dacowboyfitness-stage",
+    "staging": "dacowboyfitness-stage",
+    "production": "dacowboyfitness-website"
   }
 }

@@ -18,6 +18,14 @@ import { journalEntries } from '../../data/content'
           :title="entry.title"
         />
       </div>
+      <div class="mt-16">
+        <router-link to="/journal" class="view-all-link font-label-sm">
+          VIEW ALL JOURNALS
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+          </svg>
+        </router-link>
+      </div>
     </div>
   </section>
 </template>
@@ -45,5 +53,22 @@ import { journalEntries } from '../../data/content'
 }
 .section-subtitle {
   color: var(--color-on-surface-variant);
+}
+.view-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  color: var(--color-primary);
+  text-decoration: none;
+  border: 1px solid var(--border-subtle);
+  padding: 12px 24px;
+  transition: all 0.3s ease;
+}
+.view-all-link:hover {
+  background-color: var(--color-primary);
+  color: var(--color-on-primary);
+  border-color: var(--color-primary);
 }
 </style>

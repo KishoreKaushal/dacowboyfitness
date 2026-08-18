@@ -208,7 +208,7 @@ function handleToggleComplete() {
             v-if="activeLesson && activeLesson.videoUrl"
             :src="activeLesson.videoUrl"
             class="w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
             allowfullscreen
             title="Lesson Video Player"
           ></iframe>
