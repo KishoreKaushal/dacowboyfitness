@@ -12,20 +12,19 @@ const props = defineProps<{
   block: VideoBlockData
 }>()
 
-// Extract YouTube ID if applicable for clean embedding/playback
+// Robust extraction of 11-char YouTube ID from any youtube.com or youtu.be URL
 const youtubeId = computed(() => {
   if (!props.block.src) return null
   const url = props.block.src.trim()
-  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/
+  const regExp = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|v\/|shorts\/)|youtu\.be\/)([\w-]{11})/i
   const match = url.match(regExp)
-  return match && match[2].length === 11 ? match[2] : null
+  return match ? match[1] : null
 })
 
-const isYouTube = computed(() => !!youtubeId.value)
-
-const embedUrl = computed(() => {
+// Use Vidstack provider syntax for YouTube or fallback to direct URL
+const mediaSrc = computed(() => {
   if (youtubeId.value) {
-    return `https://www.youtube-nocookie.com/embed/${youtubeId.value}?rel=0&modestbranding=1`
+    return `youtube/${youtubeId.value}`
   }
   return props.block.src
 })
@@ -34,31 +33,9 @@ const embedUrl = computed(() => {
 <template>
   <div class="video-block">
     <div class="video-container">
-      <!-- YouTube Embed with Vidstack Container & Obsidian Styling -->
       <media-player
-        v-if="isYouTube"
-        :src="`youtube/${youtubeId}`"
-        aspect-ratio="16/9"
-        playsinline
-        class="media-player-container"
-      >
-        <media-outlet>
-          <iframe
-            :src="embedUrl"
-            class="video-iframe"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; compute-pressure"
-            allowfullscreen
-            loading="lazy"
-            title="Video Player"
-          ></iframe>
-        </media-outlet>
-      </media-player>
-
-      <!-- Direct HTML5 video fallback -->
-      <media-player
-        v-else
-        :src="block.src"
-        aspect-ratio="16/9"
+        :src="mediaSrc"
+        :aspect-ratio="block.aspectRatio || '16/9'"
         playsinline
         class="media-player-container"
       >
