@@ -13,7 +13,7 @@ import sys
 import glob
 import json
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 
 try:
     import frontmatter
@@ -314,7 +314,7 @@ def process_journal_file(filepath: str, db=None, dry_run: bool = False, interact
     elif date_val:
         date_str = str(date_val)
     else:
-        date_str = datetime.utcnow().strftime("%Y-%m-%d")
+        date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 
     tags = post.metadata.get("tags", ["journal"])
     if isinstance(tags, str):
@@ -366,7 +366,7 @@ def process_journal_file(filepath: str, db=None, dry_run: bool = False, interact
         "author": author,
         "date": date_str,
         "createdAt": date_str,
-        "updatedAt": datetime.utcnow().isoformat() + "Z",
+        "updatedAt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "published": post.metadata.get("published", True),
         "tags": tags,
         "excerpt": excerpt,
