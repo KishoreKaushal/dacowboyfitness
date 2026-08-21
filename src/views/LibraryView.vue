@@ -11,7 +11,7 @@ const { isAuthenticated, openAuthModal } = useAuth()
 
 const featuredCourse = computed(() => {
   if (!ownedCourses.value.length) return null
-  return ownedCourses.value.find(c => (c.completedLessonsCount || 0) < c.lessonsCount) || ownedCourses.value[0]
+  return ownedCourses.value.find((c: any) => (c.completedLessonsCount || 0) < c.lessonsCount) || ownedCourses.value[0]
 })
 
 function resumeCourse() {

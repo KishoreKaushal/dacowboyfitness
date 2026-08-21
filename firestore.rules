@@ -5,6 +5,28 @@ service cloud.firestore {
     // User profile documents: users can read and write their own document
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+
+      // Users can only READ their own entitlements
+      match /courseEntitlements/{courseId} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false; // Writes must happen via Cloud Functions
+      }
+
+      // Users can only READ their own redemptions
+      match /couponRedemptions/{couponCode} {
+        allow read: if request.auth != null && request.auth.uid == userId;
+        allow write: if false; // Writes must happen via Cloud Functions
+      }
+    }
+
+    // Protected course content: denied to all clients. Only accessed via Cloud Function (Admin SDK)
+    match /courseContent/{courseId} {
+      allow read, write: if false;
+    }
+
+    // Coupons: denied to all clients. Only accessed via Cloud Function (Admin SDK)
+    match /coupons/{couponId} {
+      allow read, write: if false;
     }
   }
 }

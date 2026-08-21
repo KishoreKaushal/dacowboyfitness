@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCourseAccess } from '../composables/useCourseAccess'
 import { useAuth } from '../composables/useAuth'
@@ -8,14 +8,37 @@ import { useCheckout } from '../composables/useCheckout'
 const route = useRoute()
 const router = useRouter()
 
-const { getCourseById, isCourseUnlocked, toggleLessonCompletion } = useCourseAccess()
+const { getCourseById, fetchCourseAccess, toggleLessonCompletion } = useCourseAccess()
 const { isAuthenticated, openAuthModal } = useAuth()
 const { openCheckout } = useCheckout()
 
 const courseId = computed(() => (route.params.id as string) || '1')
 const course = computed(() => getCourseById(courseId.value) || getCourseById('1')!)
 
-const isUnlocked = computed(() => isCourseUnlocked(course.value?.id || ''))
+const isUnlocked = ref(false)
+const protectedCourseData = ref<any>(null)
+const isLoadingAccess = ref(true)
+
+watch(() => [course.value.id, isAuthenticated.value], async () => {
+  if (!isAuthenticated.value) {
+    isUnlocked.value = false
+    protectedCourseData.value = null
+    isLoadingAccess.value = false
+    return
+  }
+
+  isLoadingAccess.value = true
+  try {
+    const data = await fetchCourseAccess(course.value.id)
+    protectedCourseData.value = data
+    isUnlocked.value = true
+  } catch (e) {
+    isUnlocked.value = false
+    protectedCourseData.value = null
+  } finally {
+    isLoadingAccess.value = false
+  }
+}, { immediate: true })
 
 const activeLessonId = ref<string>('')
 

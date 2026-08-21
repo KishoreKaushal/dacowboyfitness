@@ -1,22 +1,23 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useCheckout } from '../../composables/useCheckout'
-import { useCourseAccess } from '../../composables/useCourseAccess'
+import { useCoupons } from '../../composables/useCoupons'
 
 const { isOpen, selectedCourse, closeCheckout } = useCheckout()
-const { unlockCourse } = useCourseAccess()
+const { isRedeeming, redeemCoupon } = useCoupons()
 
-const isProcessing = ref(false)
+const couponCode = ref('')
 
-function handlePay() {
-  if (!selectedCourse.value) return
-  isProcessing.value = true
+async function handleRedeem() {
+  if (!selectedCourse.value || !couponCode.value.trim()) return
 
-  setTimeout(() => {
-    unlockCourse(selectedCourse.value!.id)
-    isProcessing.value = false
+  const success = await redeemCoupon(couponCode.value.trim(), selectedCourse.value.id)
+  if (success) {
+    couponCode.value = ''
     closeCheckout()
-  }, 1000)
+    // Force a reload so CoursePlayerView refetches the entitlement
+    window.location.reload()
+  }
 }
 </script>
 
@@ -33,7 +34,7 @@ function handlePay() {
       >
         <!-- Header & Close -->
         <div class="flex items-center justify-between">
-          <span class="font-mono text-xs uppercase tracking-widest text-muted">Checkout Confirmation</span>
+          <span class="font-mono text-xs uppercase tracking-widest text-muted">Unlock Course</span>
           <button
             @click="closeCheckout"
             class="p-1 rounded-full opacity-60 hover:opacity-100 transition-opacity"
@@ -58,57 +59,30 @@ function handlePay() {
           </div>
         </div>
 
-        <!-- Order Summary -->
-        <div
-          class="w-full rounded-xl p-4 font-mono text-xs flex flex-col gap-3 border"
-          style="background: var(--glass-bg-start); border-color: var(--border-subtle)"
-        >
-          <div class="flex justify-between items-center" style="color: var(--color-on-surface-variant)">
-            <span>COURSE ACCESS</span>
-            <span class="font-bold" style="color: var(--color-on-surface)">{{ selectedCourse.price }}</span>
-          </div>
-          <div class="flex justify-between items-center text-[10px]" style="color: var(--color-on-surface-variant)">
-            <span>ACCESS TYPE</span>
-            <span>LIFETIME · ONE-TIME</span>
-          </div>
-          <div class="h-[1px] w-full" style="background: var(--border-subtle)"></div>
-          <div class="flex justify-between items-center font-bold text-sm" style="color: var(--color-on-surface)">
-            <span>TOTAL</span>
-            <span>{{ selectedCourse.price }}</span>
-          </div>
+        <!-- Coupon Input -->
+        <div class="flex flex-col gap-2 mt-2">
+          <label class="font-mono text-[10px] text-muted uppercase tracking-widest">Enter Access Code</label>
+          <input
+            v-model="couponCode"
+            type="text"
+            placeholder="e.g. FOUNDERS2026"
+            class="w-full bg-transparent border rounded-lg px-4 py-3 font-mono text-sm uppercase tracking-wider outline-none transition-colors"
+            style="color: var(--color-on-surface); border-color: var(--border-medium)"
+            :disabled="isRedeeming"
+            @keyup.enter="handleRedeem"
+          />
         </div>
-
-        <!-- Reassurance Bullets -->
-        <ul class="flex flex-col gap-2 text-xs" style="color: var(--color-on-surface-variant)">
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>Lifetime access to all video lessons</span>
-          </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-            </svg>
-            <span>All current & future course updates</span>
-          </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-            </svg>
-            <span>Secure payment via Razorpay</span>
-          </li>
-        </ul>
 
         <!-- Actions -->
         <div class="flex flex-col gap-2 mt-1">
           <button
-            v-if="!isProcessing"
-            @click="handlePay"
-            class="w-full py-3.5 px-4 rounded-xl font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-lg"
+            v-if="!isRedeeming"
+            @click="handleRedeem"
+            :disabled="!couponCode.trim()"
+            class="w-full py-3.5 px-4 rounded-xl font-mono text-xs uppercase tracking-widest font-semibold transition-all duration-300 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
             style="background: var(--color-primary); color: var(--color-on-primary)"
           >
-            Pay {{ selectedCourse.price }}
+            Redeem Code
           </button>
           <button
             v-else
@@ -119,12 +93,12 @@ function handlePay() {
             <svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            Opening secure checkout...
+            Verifying...
           </button>
 
           <button
             @click="closeCheckout"
-            :disabled="isProcessing"
+            :disabled="isRedeeming"
             class="w-full py-2 font-mono text-xs uppercase tracking-wider text-muted hover:underline transition-colors"
           >
             Cancel
@@ -133,7 +107,7 @@ function handlePay() {
 
         <!-- Footer footnote -->
         <div class="text-center">
-          <p class="font-mono text-[10px] text-muted">Test mode · Instant mockup unlock demonstration</p>
+          <p class="font-mono text-[10px] text-muted">Razorpay integration pending. Use access code to unlock.</p>
         </div>
       </div>
     </div>

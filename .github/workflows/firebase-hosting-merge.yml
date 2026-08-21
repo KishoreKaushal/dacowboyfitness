@@ -32,6 +32,15 @@ jobs:
           VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET_STAGE || secrets.VITE_FIREBASE_STORAGE_BUCKET }}
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID_STAGE || secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID_STAGE || secrets.VITE_FIREBASE_APP_ID }}
+      - name: Build Functions
+        run: npm ci && npm run build
+        working-directory: functions
+      - name: Deploy Functions and Rules
+        run: |
+          echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_DACOWBOYFITNESS_STAGE }}" > sa.json
+          export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/sa.json
+          npx firebase-tools deploy --only functions,firestore:rules --project dacowboyfitness-stage
+          rm sa.json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
