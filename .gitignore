@@ -4,7 +4,6 @@ node_modules
 # Build output
 dist
 functions/lib
-functions/lib/*
 
 # Local env files
 *.local

@@ -1,11 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import * as admin from "firebase-admin";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 
-// Ensure app is initialized exactly once
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
+// admin.initializeApp() and setGlobalOptions({ region }) are handled in index.ts
 
 export const redeemCoupon = onCall(async (request) => {
   const { auth, data } = request;

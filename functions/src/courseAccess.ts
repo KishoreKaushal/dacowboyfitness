@@ -1,10 +1,7 @@
 import { onCall, HttpsError } from "firebase-functions/v2/https";
-import * as admin from "firebase-admin";
 import { getFirestore } from "firebase-admin/firestore";
 
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
+// admin.initializeApp() and setGlobalOptions({ region }) are handled in index.ts
 
 export const getCourseAccess = onCall(async (request) => {
   const { auth, data } = request;
