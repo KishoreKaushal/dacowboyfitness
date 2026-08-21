@@ -1,0 +1,79 @@
+name: Deploy to Production
+on:
+  workflow_dispatch:
+    inputs:
+      commit_sha:
+        description: 'Exact commit SHA successfully deployed to Staging LIVE (no default — must be specified)'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validate_sha:
+    name: Validate Release SHA
+    runs-on: ubuntu-latest
+    steps:
+      - name: Full-history checkout of main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Check A — SHA is an ancestor of main
+        run: |
+          git merge-base --is-ancestor "${{ inputs.commit_sha }}" HEAD \
+            || (echo "ERROR: '${{ inputs.commit_sha }}' is not a reachable ancestor of main." \
+                && echo "Only commits that have been merged to main can be promoted to production." \
+                && exit 1)
+          echo "Check A passed: SHA is a reachable ancestor of main."
+
+      - name: Check B — SHA has a successful Staging LIVE deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          RESULT=$(gh api \
+            "repos/${{ github.repository }}/actions/workflows/firebase-hosting-merge.yml/runs?head_sha=${{ inputs.commit_sha }}&per_page=100" \
+            --jq '[.workflow_runs[] | select(.conclusion == "success")] | length')
+          if [ "$RESULT" -eq 0 ]; then
+            echo "ERROR: SHA '${{ inputs.commit_sha }}' has no successful Staging LIVE deployment."
+            echo "Merge this commit to main, confirm it deploys to Staging LIVE successfully, then retry."
+            exit 1
+          fi
+          echo "Check B passed: SHA has $RESULT successful Staging LIVE deployment(s)."
+
+  deploy_production:
+    name: Deploy to Production (Live)
+    needs: validate_sha
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Checkout exact release SHA
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.commit_sha }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - run: npm run build:prod
+        env:
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY_PROD || secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN_PROD || secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID_PROD || secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET_PROD || secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID_PROD || secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID_PROD || secrets.VITE_FIREBASE_APP_ID }}
+
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_DACOWBOYFITNESS_WEBSITE }}
+          channelId: live
+          projectId: dacowboyfitness-website

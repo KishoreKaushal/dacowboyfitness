@@ -47,7 +47,7 @@ watch(renderedHtml, async () => {
 <style>
 /* Scoped or global styles for rich editorial typography */
 .markdown-body {
-  color: var(--color-on-surface, #e5e2e1);
+  color: var(--article-body-color, var(--color-on-surface, #e5e2e1));
   font-family: var(--font-body, 'Inter', system-ui, sans-serif);
   font-size: 18px;
   line-height: 1.75;
@@ -60,7 +60,7 @@ watch(renderedHtml, async () => {
 .markdown-body h3,
 .markdown-body h4 {
   font-family: var(--font-display, 'EB Garamond', Georgia, serif);
-  color: var(--color-primary, #ffffff);
+  color: var(--article-heading-color, var(--color-primary, #ffffff));
   font-weight: 500;
   line-height: 1.2;
   margin-top: 48px;
@@ -89,11 +89,11 @@ watch(renderedHtml, async () => {
 
 .markdown-body p {
   margin-bottom: 24px;
-  color: var(--color-on-surface, #e5e2e1);
+  color: var(--article-body-color, var(--color-on-surface, #e5e2e1));
 }
 
 .markdown-body strong {
-  color: #ffffff;
+  color: var(--article-heading-color, var(--color-primary, #ffffff));
   font-weight: 600;
 }
 
@@ -119,16 +119,23 @@ watch(renderedHtml, async () => {
 .markdown-body li {
   margin-bottom: 10px;
   line-height: 1.65;
+  color: var(--article-body-color, var(--color-on-surface, #e5e2e1));
 }
 
 .markdown-body blockquote {
-  border-left: 2px solid var(--color-primary, #ffffff);
-  padding: 16px 24px;
+  border-left: 3px solid var(--blockquote-border, var(--color-primary, #ffffff));
+  padding: 18px 24px;
   margin: 32px 0;
-  background: var(--color-surface-container, rgba(32, 31, 31, 0.5));
+  background: var(--blockquote-bg, var(--color-surface-container, rgba(32, 31, 31, 0.5)));
   border-radius: 0 8px 8px 0;
   font-style: italic;
-  color: var(--color-on-surface-variant, #c4c7c8);
+  color: var(--blockquote-text, var(--color-on-surface-variant, #c4c7c8));
+}
+
+.markdown-body blockquote strong {
+  color: var(--article-heading-color, var(--color-primary));
+  font-weight: 600;
+  font-style: normal;
 }
 
 .markdown-body blockquote p:last-child {
@@ -138,11 +145,11 @@ watch(renderedHtml, async () => {
 .markdown-body code {
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
   font-size: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 2px 6px;
+  background: var(--code-bg, rgba(255, 255, 255, 0.08));
+  padding: 3px 7px;
   border-radius: 4px;
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  color: var(--code-text, var(--color-primary, #ffffff));
+  border: 1px solid var(--border-subtle);
 }
 
 .markdown-body pre {
@@ -152,6 +159,7 @@ watch(renderedHtml, async () => {
   padding: 20px;
   overflow-x: auto;
   margin: 28px 0;
+  color: var(--article-body-color, var(--color-on-surface));
 }
 
 .markdown-body pre code {
@@ -160,6 +168,7 @@ watch(renderedHtml, async () => {
   border: none;
   font-size: 14px;
   line-height: 1.6;
+  color: inherit;
 }
 
 .markdown-body a {
@@ -173,6 +182,12 @@ watch(renderedHtml, async () => {
   opacity: 0.8;
 }
 
+.markdown-body hr {
+  border: 0;
+  border-top: 1px solid var(--border-subtle);
+  margin: 48px 0;
+}
+
 /* KaTeX formula enhancements */
 .markdown-body .katex-display {
   margin: 28px 0;
@@ -183,6 +198,7 @@ watch(renderedHtml, async () => {
 
 .markdown-body .katex {
   font-size: 1.1em;
-  color: #ffffff;
+  color: var(--article-heading-color, var(--color-primary, #ffffff));
 }
 </style>
+

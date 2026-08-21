@@ -1,86 +1,74 @@
 import { ref } from 'vue'
-import { doc, getDoc, collection, getDocs, query, orderBy } from 'firebase/firestore'
-import { db } from '../lib/firebase'
 import type { JournalEntry, JournalEntrySummary } from '../types/journal'
+
+const BASE_URL = import.meta.env.VITE_JOURNAL_CONTENT_BASE_URL ?? '/content/journals'
+
+// In-memory cache across navigation within the same session
+const indexCache = ref<JournalEntrySummary[] | null>(null)
+const entryCache = new Map<string, JournalEntry>()
 
 export function useJournals() {
   const isLoading = ref<boolean>(false)
   const error = ref<string | null>(null)
 
   /**
-   * Fetch a single journal entry by its deterministic slug.
-   * Firestore-only: no mock fallback.
+   * Fetch all published journal entry summaries from index.json.
    */
-  async function fetchJournalBySlug(slug: string): Promise<JournalEntry | null> {
-    if (!slug) return null
+  async function fetchPublishedJournals(): Promise<JournalEntrySummary[]> {
+    if (indexCache.value) {
+      return indexCache.value
+    }
+
     isLoading.value = true
     error.value = null
 
     try {
-      const docRef = doc(db, 'journals', slug)
-      const docSnap = await getDoc(docRef)
-
-      if (!docSnap.exists()) {
-        error.value = `Journal not found: "${slug}"`
-        return null
+      const res = await fetch(`${BASE_URL}/index.json`)
+      if (!res.ok) {
+        throw new Error(`Failed to load journal index (HTTP ${res.status})`)
       }
-
-      const data = docSnap.data()
-      return {
-        id: docSnap.id,
-        slug: data.slug || docSnap.id,
-        title: data.title || '',
-        author: data.author || 'Kishore Kaushal',
-        date: data.date || data.createdAt || new Date().toISOString(),
-        published: data.published !== false,
-        tags: data.tags || [],
-        excerpt: data.excerpt || '',
-        readTimeMinutes: data.readTimeMinutes || 3,
-        coverImage: data.coverImage || undefined,
-        blocks: data.blocks || [],
-        relatedJournals: data.relatedJournals || []
-      } as JournalEntry
+      const data = await res.json()
+      const journals: JournalEntrySummary[] = data.journals || []
+      indexCache.value = journals
+      return journals
     } catch (err: any) {
-      console.error(`[useJournals] Firestore fetch failed for slug "${slug}":`, err)
-      error.value = err?.message || 'Failed to load journal'
-      return null
+      console.error('[useJournals] Failed to fetch journal index:', err)
+      error.value = err?.message || 'Failed to load journals'
+      return []
     } finally {
       isLoading.value = false
     }
   }
 
   /**
-   * Fetch all published journal entry summaries for index listing.
-   * Firestore-only: no mock fallback.
+   * Fetch a single journal entry by its deterministic slug.
    */
-  async function fetchPublishedJournals(): Promise<JournalEntrySummary[]> {
+  async function fetchJournalBySlug(slug: string): Promise<JournalEntry | null> {
+    if (!slug) return null
+
+    if (entryCache.has(slug)) {
+      return entryCache.get(slug)!
+    }
+
     isLoading.value = true
     error.value = null
 
     try {
-      const journalsCol = collection(db, 'journals')
-      const q = query(journalsCol, orderBy('date', 'desc'))
-      const snapshot = await getDocs(q)
-
-      return snapshot.docs
-        .map((docSnap) => {
-          const data = docSnap.data()
-          return {
-            id: docSnap.id,
-            slug: data.slug || docSnap.id,
-            title: data.title || 'Untitled',
-            excerpt: data.excerpt || '',
-            tags: data.tags || [],
-            readTimeMinutes: data.readTimeMinutes || 3,
-            date: data.date || data.createdAt || '',
-            coverImage: data.coverImage?.src || (typeof data.coverImage === 'string' ? data.coverImage : undefined)
-          } as JournalEntrySummary
-        })
-        .filter((j) => j.slug && j.title)
+      const res = await fetch(`${BASE_URL}/entries/${slug}.json`)
+      if (res.status === 404) {
+        error.value = `Journal not found: "${slug}"`
+        return null
+      }
+      if (!res.ok) {
+        throw new Error(`Failed to load journal "${slug}" (HTTP ${res.status})`)
+      }
+      const entry: JournalEntry = await res.json()
+      entryCache.set(slug, entry)
+      return entry
     } catch (err: any) {
-      console.error('[useJournals] Firestore list fetch failed:', err)
-      error.value = err?.message || 'Failed to load journals'
-      return []
+      console.error(`[useJournals] Failed to fetch entry for "${slug}":`, err)
+      error.value = err?.message || 'Failed to load journal'
+      return null
     } finally {
       isLoading.value = false
     }

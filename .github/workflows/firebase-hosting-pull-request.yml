@@ -16,6 +16,14 @@ jobs:
         with:
           node-version: '22'
           cache: 'npm'
+      - name: Validate journal JSON is up to date
+        run: |
+          pip install -r scripts/requirements.txt -q
+          python3 scripts/build_journals.py
+          git diff --exit-code public/content/journals/ \
+            || (echo "ERROR: public/content/journals/ is out of sync with journals/*.md" \
+                && echo "Run 'npm run build:journals' locally and commit the result." \
+                && exit 1)
       - run: npm ci
       - run: npm run build:staging
         env:

@@ -388,9 +388,12 @@ export function getAllTags(): string[] {
 
 /** Format date string to editorial format: AUG 17, 2026 */
 export function formatJournalDate(dateStr: string): string {
-  const d = new Date(dateStr + 'T00:00:00')
+  if (!dateStr) return ''
+  const cleanStr = dateStr.includes('T') ? dateStr : `${dateStr}T00:00:00`
+  const d = new Date(cleanStr)
+  if (isNaN(d.getTime())) return ''
   return d
     .toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
     .toUpperCase()
-    .replace(',', ',')
 }
+
