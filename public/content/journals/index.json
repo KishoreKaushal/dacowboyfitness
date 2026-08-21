@@ -1,0 +1,33 @@
+{
+  "journals": [
+    {
+      "id": "tasting-blood-and-biological-comeback",
+      "slug": "tasting-blood-and-biological-comeback",
+      "title": "Tasting Blood: Athleticism, Dietary Dogma, and the Biology of My Comeback",
+      "excerpt": "From elite junior athletics and stunted recovery on vegetarian dogma to academic burnout, digestive collapse, and reclaiming peak biological performance.",
+      "tags": [
+        "athletics",
+        "nutrition",
+        "biology",
+        "training"
+      ],
+      "readTimeMinutes": 4,
+      "date": "2026-08-21",
+      "coverImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      "id": "advanced-biomechanical-waves",
+      "slug": "advanced-biomechanical-waves",
+      "title": "Advanced Biomechanical Waves & Force Vectors",
+      "excerpt": "Analyzing wave dynamics, rate of force development, and first-principles movement mechanics.",
+      "tags": [
+        "biomechanics",
+        "physics",
+        "training"
+      ],
+      "readTimeMinutes": 1,
+      "date": "2026-08-17",
+      "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
+    }
+  ]
+}
