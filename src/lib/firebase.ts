@@ -16,7 +16,7 @@ const firebaseConfig = {
 const app = !getApps().length ? initializeApp(firebaseConfig) : getApp()
 const auth = getAuth(app)
 const db = getFirestore(app)
-const functions = getFunctions(app)
+const functions = getFunctions(app, 'asia-south2')
 const googleProvider = new GoogleAuthProvider()
 
 googleProvider.setCustomParameters({
