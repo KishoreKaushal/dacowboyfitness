@@ -28,6 +28,10 @@ npm-debug.log*
 # Backup
 *.bak
 
+# Python
+__pycache__/
+*.py[cod]
+
 # secrets
 .secrets
 .secrets/*

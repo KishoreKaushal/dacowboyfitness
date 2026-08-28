@@ -81,11 +81,6 @@
       "content": "---\n\n## Key Takeaways\n\n1. **Biological Realism Over Ideology:** High-output athletic performance demands high-leverage, complete protein matrices. Bioavailability ($PDCAAS / DIAAS$) dictates structural recovery.\n2. **Beware of Sedentary Inertia:** Academic and cognitive excellence should never come at the expense of physical vitality. The mind and kinetic chain are unified biological systems.\n3. **Taste the Blood:** True health is not the mere absence of clinical disease\u2014it is maintaining peak capacity both cognitively and kinesthetically."
     }
   ],
-  "coverImage": {
-    "src": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop",
-    "alt": "Track and athletic sprinting",
-    "caption": "Peak athletic conditioning demands uncompromising biological nutrition"
-  },
   "relatedJournals": [
     {
       "id": "advanced-biomechanical-waves",
@@ -98,8 +93,22 @@
         "training"
       ],
       "readTimeMinutes": 1,
-      "date": "2026-08-17",
-      "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
+      "date": "2026-08-17"
+    },
+    {
+      "id": "the-calorie-illusion-kekwick-study",
+      "slug": "the-calorie-illusion-kekwick-study",
+      "title": "The Calorie Illusion: Kekwick's 1956 Study, Macronutrient Partitioning, and Biological Energy",
+      "excerpt": "Why the 'calories in, calories out' dogma fails biological reality, dissecting Alan Kekwick's landmark 1956 metabolic study, and the real hormonal drivers of fat loss.",
+      "tags": [
+        "nutrition",
+        "biology",
+        "metabolism",
+        "fat-loss",
+        "athletics"
+      ],
+      "readTimeMinutes": 6,
+      "date": "2026-08-28"
     }
   ]
 }
