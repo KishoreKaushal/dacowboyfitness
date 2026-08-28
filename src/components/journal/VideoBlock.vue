@@ -6,7 +6,9 @@ import 'vidstack/styles/defaults.css'
 // @ts-ignore
 import 'vidstack/styles/community-skin/video.css'
 // @ts-ignore
-import 'vidstack/elements'
+import { defineCustomElements } from 'vidstack/elements'
+
+defineCustomElements()
 
 const props = defineProps<{
   block: VideoBlockData
