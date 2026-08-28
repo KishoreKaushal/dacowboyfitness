@@ -81,6 +81,11 @@
       "content": "---\n\n## Key Takeaways\n\n1. **Biological Realism Over Ideology:** High-output athletic performance demands high-leverage, complete protein matrices. Bioavailability ($PDCAAS / DIAAS$) dictates structural recovery.\n2. **Beware of Sedentary Inertia:** Academic and cognitive excellence should never come at the expense of physical vitality. The mind and kinetic chain are unified biological systems.\n3. **Taste the Blood:** True health is not the mere absence of clinical disease\u2014it is maintaining peak capacity both cognitively and kinesthetically."
     }
   ],
+  "coverImage": {
+    "src": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop",
+    "alt": "Track and athletic sprinting",
+    "caption": "Peak athletic conditioning demands uncompromising biological nutrition"
+  },
   "relatedJournals": [
     {
       "id": "advanced-biomechanical-waves",
@@ -93,7 +98,8 @@
         "training"
       ],
       "readTimeMinutes": 1,
-      "date": "2026-08-17"
+      "date": "2026-08-17",
+      "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
     },
     {
       "id": "the-calorie-illusion-kekwick-study",
@@ -108,7 +114,8 @@
         "athletics"
       ],
       "readTimeMinutes": 6,
-      "date": "2026-08-28"
+      "date": "2026-08-28",
+      "coverImage": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop"
     }
   ]
 }

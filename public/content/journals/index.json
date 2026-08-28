@@ -13,7 +13,8 @@
         "athletics"
       ],
       "readTimeMinutes": 6,
-      "date": "2026-08-28"
+      "date": "2026-08-28",
+      "coverImage": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop"
     },
     {
       "id": "tasting-blood-and-biological-comeback",
@@ -27,7 +28,8 @@
         "training"
       ],
       "readTimeMinutes": 4,
-      "date": "2026-08-21"
+      "date": "2026-08-21",
+      "coverImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop"
     },
     {
       "id": "advanced-biomechanical-waves",
@@ -40,7 +42,8 @@
         "training"
       ],
       "readTimeMinutes": 1,
-      "date": "2026-08-17"
+      "date": "2026-08-17",
+      "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
     }
   ]
 }

@@ -58,6 +58,11 @@
       "content": "---\n\n## Personal Athletic Protocol: From 68 kg to Sub-20 5K\n\nMy personal athletic journey mirrors these clinical findings. When I weighed 68 kg at ~20% body fat while practicing traditional bodybuilding and consuming carbohydrates, I meticulously counted between 2200 and 2500 kcal per day. Despite tracking every gram, I suffered from:\n- Persistent joint inflammation and systemic stiffness.\n- Energy crashes following high-glycemic meals.\n- Inability to break through sub-20 minute 5-kilometer running thresholds.\n\n### The Low-Carb / Animal-Based Shift\n\nI eliminated calorie tracking entirely and transitioned to a nutrient-dense, high-fat, high-protein protocol centered on whole animal sources\u2014grass-fed ghee, butter, cheese, and mutton. \n\nToday, my daily energy intake frequently exceeds **2800 kcal of energy-dense lipids and proteins**, yet my body weight remains rock-solid at **56.5 kg** (and drops to 55 kg when seasonal fruits like mangoes are phased out in winter). \n\nMore importantly, my aerobic capacity, lactic threshold, and joint recovery have peaked, enabling consistent **sub-20 minute 5K race performance**.\n\n---\n\n## The Institutional Capture of Nutrition\n\nWhy was Kekwick\u2019s 1956 study, alongside dozens of similar metabolic ward investigations, excluded from mainstream textbooks?\n\nThe answer lies in corporate incentives and agricultural lobbying:\n- **The Ultra-Processed Industry:** Massive multi-national corporations profit exclusively from hyper-palatable, low-satiety, grain- and seed-oil-based processed foods.\n- **The Monoculture Complex:** Industrial agriculture relies on massive pesticide, fertilizer, and monocropping infrastructure.\n- **The Calorie Counting Narrative:** Blaming the individual for \"failing to count calories\" absolves processed food manufacturers of engineering metabolic dysfunction.\n\nWhen you consume real, unprocessed, species-appropriate animal fats and bioavailable proteins, your body's leptin and peptide YY (PYY) signaling regulate appetite autonomously. Calorie tracking becomes entirely redundant.\n\n---\n\n## Key Takeaways\n\n1. **Substrate Trumps Caloric Quantity:** The hormonal response to food (insulin vs. glucagon dynamics) dictates whether energy is stored in adipocytes or oxidized for mechanical work.\n2. **Stop Chronic Calorie Restricting:** Chronic low-calorie, high-carb dieting lowers basal metabolic rate ($BMR$) and triggers severe metabolic adaptation.\n3. **Prioritize Bioavailable Lipids & Proteins:** Base your nutrition on nutrient-dense animal proteins and natural fats (ghee, butter, eggs, ruminant meats) that provide sustained cellular energy and complete amino acid profiles.\n4. **Eat to Satiety:** Trust biological satiety signals rather than arbitrary smartphone tracker algorithms."
     }
   ],
+  "coverImage": {
+    "src": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop",
+    "alt": "Scientific laboratory equipment and metabolic research",
+    "caption": "Clinical bio-energetics vs ideological nutrition dogma"
+  },
   "relatedJournals": [
     {
       "id": "tasting-blood-and-biological-comeback",
@@ -71,7 +76,8 @@
         "training"
       ],
       "readTimeMinutes": 4,
-      "date": "2026-08-21"
+      "date": "2026-08-21",
+      "coverImage": "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?q=80&w=1200&auto=format&fit=crop"
     },
     {
       "id": "advanced-biomechanical-waves",
@@ -84,7 +90,8 @@
         "training"
       ],
       "readTimeMinutes": 1,
-      "date": "2026-08-17"
+      "date": "2026-08-17",
+      "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
     }
   ]
 }
