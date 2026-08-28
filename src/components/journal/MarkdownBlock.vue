@@ -1,15 +1,12 @@
 <script setup lang="ts">
-import { computed, ref, watch, nextTick } from 'vue'
+import { computed } from 'vue'
 import MarkdownIt from 'markdown-it'
+import katex from 'katex'
 import 'katex/dist/katex.min.css'
-// @ts-ignore
-import renderMathInElement from 'katex/contrib/auto-render'
 
 const props = defineProps<{
   content: string
 }>()
-
-const containerRef = ref<HTMLElement | null>(null)
 
 const md = new MarkdownIt({
   html: true,
@@ -20,28 +17,72 @@ const md = new MarkdownIt({
 
 const renderedHtml = computed(() => {
   if (!props.content) return ''
-  return md.render(props.content)
-})
 
-// After Vue updates the DOM with new markdown HTML, run KaTeX auto-render
-watch(renderedHtml, async () => {
-  await nextTick()
-  if (containerRef.value) {
-    renderMathInElement(containerRef.value, {
-      delimiters: [
-        { left: '$$', right: '$$', display: true },
-        { left: '$',  right: '$',  display: false },
-      ],
-      throwOnError: false,
-      errorColor: '#ffb4ab',
-      strict: false,
-    })
-  }
-}, { immediate: true })
+  const placeholders = new Map<string, string>()
+  let counter = 0
+
+  // 1. Temporarily protect code blocks and inline code from math matching
+  let text = props.content.replace(/(```[\s\S]*?```|`[^`\n]+?`)/g, (match) => {
+    const id = `@@CODE_TOKEN_${counter++}@@`
+    placeholders.set(id, match)
+    return id
+  })
+
+  // 2. Extract and pre-render block math: $$...$$
+  text = text.replace(/\$\$([\s\S]+?)\$\$/g, (match, math) => {
+    const id = `@@MATH_BLOCK_${counter++}@@`
+    try {
+      const rendered = katex.renderToString(math.trim(), {
+        displayMode: true,
+        throwOnError: false,
+        strict: false,
+      })
+      placeholders.set(id, `<div class="katex-display-wrapper">${rendered}</div>`)
+    } catch {
+      placeholders.set(id, match)
+    }
+    return `\n\n${id}\n\n`
+  })
+
+  // 3. Extract and pre-render inline math: $...$
+  text = text.replace(/(^|[^\$])\$([^\$\n]+?)\$(?!\$)/g, (_match, prefix, math) => {
+    const id = `@@MATH_INLINE_${counter++}@@`
+    try {
+      const rendered = katex.renderToString(math.trim(), {
+        displayMode: false,
+        throwOnError: false,
+        strict: false,
+      })
+      placeholders.set(id, rendered)
+    } catch {
+      placeholders.set(id, `$${math}$`)
+    }
+    return `${prefix}${id}`
+  })
+
+  // 4. Restore code blocks before MarkdownIt parses markdown
+  placeholders.forEach((val, id) => {
+    if (id.startsWith('@@CODE_TOKEN_')) {
+      text = text.replaceAll(id, val)
+      placeholders.delete(id)
+    }
+  })
+
+  // 5. Render markdown to HTML
+  let html = md.render(text)
+
+  // 6. Restore pre-rendered KaTeX HTML tokens
+  placeholders.forEach((renderedMath, id) => {
+    html = html.replace(`<p>${id}</p>`, renderedMath)
+    html = html.replaceAll(id, renderedMath)
+  })
+
+  return html
+})
 </script>
 
 <template>
-  <div ref="containerRef" class="markdown-body" v-html="renderedHtml"></div>
+  <div class="markdown-body" v-html="renderedHtml"></div>
 </template>
 
 <style>
@@ -189,11 +230,14 @@ watch(renderedHtml, async () => {
 }
 
 /* KaTeX formula enhancements */
+.markdown-body .katex-display-wrapper,
+.markdown-body .katex-block,
 .markdown-body .katex-display {
-  margin: 28px 0;
+  margin: 32px 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 12px 0;
+  padding: 16px 0;
+  text-align: center;
 }
 
 .markdown-body .katex {

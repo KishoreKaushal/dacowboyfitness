@@ -56,24 +56,47 @@ except ImportError:
                 if raw.startswith("---"):
                     parts = raw.split("---", 2)
                     if len(parts) >= 3:
-                        current_list_key = None
-                        for line in parts[1].splitlines():
+                        yaml_text = parts[1]
+                        current_key = None
+                        current_type = None
+
+                        for line in yaml_text.splitlines():
+                            raw_line = line
                             stripped = line.strip()
                             if not stripped or stripped.startswith("#"):
                                 continue
-                            if stripped.startswith("- ") and current_list_key:
-                                item = stripped[2:].strip().strip("'\"")
-                                meta[current_list_key].append(item)
-                            elif ":" in stripped:
-                                k, v = stripped.split(":", 1)
-                                k = k.strip()
-                                v = v.strip().strip("'\"")
-                                if v == "" or v is None:
-                                    meta[k] = []
-                                    current_list_key = k
-                                else:
-                                    meta[k] = v
-                                    current_list_key = None
+
+                            indent = len(raw_line) - len(raw_line.lstrip())
+
+                            if indent == 0:
+                                if ":" in stripped:
+                                    k, v = stripped.split(":", 1)
+                                    k = k.strip()
+                                    v = v.strip().strip("\"'")
+                                    if not v:
+                                        current_key = k
+                                        current_type = None
+                                        meta[k] = None
+                                    else:
+                                        meta[k] = v
+                                        current_key = None
+                                        current_type = None
+                            else:
+                                if current_key is not None:
+                                    if stripped.startswith("- "):
+                                        if current_type != "list":
+                                            meta[current_key] = []
+                                            current_type = "list"
+                                        meta[current_key].append(stripped[2:].strip().strip("\"'"))
+                                    elif ":" in stripped:
+                                        if current_type != "dict":
+                                            meta[current_key] = {}
+                                            current_type = "dict"
+                                        sub_k, sub_v = stripped.split(":", 1)
+                                        sub_k = sub_k.strip()
+                                        sub_v = sub_v.strip().strip("\"'")
+                                        meta[current_key][sub_k] = sub_v
+
                         content = parts[2]
                 return _BasicPost(content, meta)
 

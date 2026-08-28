@@ -100,6 +100,22 @@
       "readTimeMinutes": 1,
       "date": "2026-08-17",
       "coverImage": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?q=80&w=1200&auto=format&fit=crop"
+    },
+    {
+      "id": "the-calorie-illusion-kekwick-study",
+      "slug": "the-calorie-illusion-kekwick-study",
+      "title": "The Calorie Illusion: Kekwick's 1956 Study, Macronutrient Partitioning, and Biological Energy",
+      "excerpt": "Why the 'calories in, calories out' dogma fails biological reality, dissecting Alan Kekwick's landmark 1956 metabolic study, and the real hormonal drivers of fat loss.",
+      "tags": [
+        "nutrition",
+        "biology",
+        "metabolism",
+        "fat-loss",
+        "athletics"
+      ],
+      "readTimeMinutes": 6,
+      "date": "2026-08-28",
+      "coverImage": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?q=80&w=1200&auto=format&fit=crop"
     }
   ]
 }
