@@ -32,6 +32,8 @@ export interface Lesson {
   duration: string
   isCompleted?: boolean
   videoUrl?: string
+  /** Curriq asset ID — when set, fetches a signed Mux playback token instead of using videoUrl */
+  assetId?: string
   notes?: string
 }
 
@@ -162,6 +164,36 @@ export const courses: Course[] = [
       { id: 's5', title: '05 · Structural Recovery & Supercompensation', duration: '17:10', isCompleted: true, videoUrl: SAMPLE_YOUTUBE_EMBED },
       { id: 's6', title: '06 · Long-term Strength Programming Architecture', duration: '22:00', isCompleted: true, videoUrl: SAMPLE_YOUTUBE_EMBED },
     ]
+  },
+  // ─── CURRIQ INTEGRATION TEST COURSE ────────────────────────────────────────
+  {
+    id: 'curriq-integration',
+    slug: 'curriq-integration',
+    title: 'Curriq Integration Course',
+    description: 'End-to-end test course for the Curriq × Mux video pipeline.',
+    longDescription: 'This course exists to validate the full Curriq video pipeline: upload → Mux encoding → signed playback token → rendered in dacowboyfitness. If this video plays, everything works.',
+    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDACa1M4FviHvhTdwZuGnaGH9PmncgG9fWITKS_EL0wB-85LCjQ1-NkTISJFrhA0uCl8kPzK4JdYTYlwIvRGJIVFgZ_CWShNodAcHPTCWY_LlVHNEHuJ7g1TWAq5UKji1QBi6pQQaQd-3dO3zsR88aUPZ3ddkLpPuuiDYS0jxIvqJJjZWm5V1fEJLqEaECDWHwKRsfZuf5c8uWDnc5eLFMIASvgl1UBlkIpQqy-PFSCisVXAdJt_zYBNI5lSfFKTIs3o26pvJUK22k',
+    alt: 'Curriq integration test course thumbnail',
+    price: '₹99',
+    duration: '5 MIN',
+    lessonsCount: 1,
+    isOwned: false,
+    completedLessonsCount: 0,
+    outcomes: [
+      'Validate Mux video upload and encoding pipeline',
+      'Confirm signed JWT playback tokens are minted correctly',
+      'Verify mux-player renders inside dacowboyfitness',
+    ],
+    lessons: [
+      {
+        id: 'ci-l1',
+        title: '01 · Mux Pipeline Smoke Test',
+        duration: '5:00',
+        isCompleted: false,
+        assetId: 'ast_223bdcfdce8d48fd851bbb5b',
+        notes: 'If this video plays with audio/video intact, the Curriq → Mux integration is fully operational.',
+      },
+    ],
   },
 ]
 
