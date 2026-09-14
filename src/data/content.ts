@@ -97,16 +97,17 @@ export const courses: Course[] = [
     price: '₹499',
     duration: '2.0 HRS',
     lessonsCount: 6,
-    isOwned: true,
-    completedLessonsCount: 3,
+    isOwned: false,
+    completedLessonsCount: 0,
     outcomes: [
       'Understand mitochondrial substrate switching',
       'Optimize daily energy levels without artificial stimulants',
       'Measure and track metabolic response objectively'
     ],
     lessons: [
-      { id: 'm1', title: '01 · Substrate Dynamics: Glycogen vs Free Fatty Acids', duration: '15:20', isCompleted: true, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Mitochondrial density and substrate preference.' },
-      { id: 'm2', title: '02 · Insulin Sensitivity & Nutrient Partitioning', duration: '19:40', isCompleted: true, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Glucose transporter 4 (GLUT4) translocation during movement.' },
+      { id: 'm1', title: '01 · Substrate Dynamics: Glycogen vs Free Fatty Acids', duration: '0:32', isCompleted: false, assetId: 'ast_82ffaacc020c448d8e9691a2', notes: 'Mux video pipeline test asset linked to Metabolic Flexibility.' },
+      { id: 'm2', title: '02 · Insulin Sensitivity & Nutrient Partitioning', duration: '19:40', isCompleted: false, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Glucose transporter 4 (GLUT4) translocation during movement.' },
+
       { id: 'm3', title: '03 · Zone 2 Cardio & Mitochondrial Biogenesis', duration: '22:15', isCompleted: true, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Sample video demonstration embedded below for local playback testing.' },
       { id: 'm4', title: '04 · Fasting Physiology & Autophagy', duration: '17:50', isCompleted: false, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Cellular cleanup mechanisms.' },
       { id: 'm5', title: '05 · Circadian Biology & Metabolic Timing', duration: '14:30', isCompleted: false, videoUrl: SAMPLE_YOUTUBE_EMBED, notes: 'Light exposure and metabolic gene expression.' },

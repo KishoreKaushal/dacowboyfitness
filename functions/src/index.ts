@@ -9,6 +9,7 @@ setGlobalOptions({
   maxInstances: 10,
 });
 
-export { getCourseAccess } from "./courseAccess";
+export { getCourseAccess, getLessonPlayback } from "./courseAccess";
 export { redeemCoupon } from "./coupons";
+
 

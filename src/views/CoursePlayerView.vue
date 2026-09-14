@@ -5,7 +5,8 @@ import { useCourseAccess } from '../composables/useCourseAccess'
 import { useAuth } from '../composables/useAuth'
 import { useCheckout } from '../composables/useCheckout'
 import { useCoupons } from '../composables/useCoupons'
-import { getVideoPlayback } from '../composables/useCurriqApi'
+import { httpsCallable } from 'firebase/functions'
+import { functions } from '../lib/firebase'
 // @ts-ignore
 import 'vidstack/styles/defaults.css'
 // @ts-ignore
@@ -63,8 +64,7 @@ const activeLesson = computed(() => {
   return course.value.lessons[0] || null
 })
 
-// ── Mux / Curriq signed playback ──────────────────────────────────────────────
-const DEV_READ_KEY = 'sk_live_ro_iTThJGwoIl0OSjXmRz9MTjdp0vuv7BAM'
+// ── Mux / Curriq signed playback (Backend-Mediated via Cloud Function) ────────
 const muxSrc = ref<string | null>(null)
 const muxLoading = ref(false)
 const muxError = ref<string | null>(null)
@@ -77,10 +77,18 @@ watch(
     if (!lesson?.assetId) return
     muxLoading.value = true
     try {
-      const playback = await getVideoPlayback(lesson.assetId, DEV_READ_KEY)
-      muxSrc.value = playback.url
-    } catch (err) {
-      muxError.value = (err as Error).message
+      const getLessonPlaybackFn = httpsCallable<
+        { courseId: string; assetId: string },
+        { playbackUrl: string; playbackId: string }
+      >(functions, 'getLessonPlayback')
+
+      const res = await getLessonPlaybackFn({
+        courseId: course.value.id,
+        assetId: lesson.assetId,
+      })
+      muxSrc.value = res.data.playbackUrl
+    } catch (err: any) {
+      muxError.value = err?.message || 'Failed to retrieve video stream'
       console.error('[Mux] Failed to fetch playback token:', err)
     } finally {
       muxLoading.value = false
